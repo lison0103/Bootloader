@@ -189,10 +189,10 @@ void UsbMassStor_init(void)
                   delay_ms(200);
                   if(key==KEY_F3){
                      
-//                    delay_ms(1500); 
-//                    TXM_StringDisplay(0,20,250,24,1,RED ,BLUE, "状态：选择断开电脑");
-//                    delay_ms(5); 
-//                    TXM_StringDisplay(0,40,200,24,1,YELLOW ,RED, "F3:断开电脑连接");
+                    
+                    TXM_StringDisplay(0,20,250,24,1,RED ,BLUE, "状态：选择断开电脑");
+                    delay_ms(5); 
+                    TXM_StringDisplay(0,30,200,24,1,YELLOW ,RED, " F3:断开电脑连接 ");
                     printf("\r\n exit usb mass \r\n");
                     break;
                   }

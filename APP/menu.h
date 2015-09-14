@@ -12,6 +12,7 @@
 #include "fatfs.h"
 #include "bsp_rtc_1302.h"
 #include "time_display.h"
+#include "lcd.h"
 
 #if 0
 
@@ -22,8 +23,9 @@ void menu_pocess(void);
 
 #else
 void RCC_init(void);
-void Lcd_init(void);
+void menu_init(void);
 void menu_pocess(void);
+void enter_menu(void);
 
 #endif
 

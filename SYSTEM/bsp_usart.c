@@ -1,9 +1,9 @@
 
 #include "bsp_usart.h" 
 
-#define USART1_EN     	          1
+#define USART1_EN     	          0
 #define USART2_EN    			        1
-#define USART3_EN                 1
+#define USART3_EN                 0
 //#define USART3_REMAP_EN	        1		
 
 /***************************************************************************************************

@@ -14,6 +14,7 @@
 #include "delay.h"
 #include "usart.h"
 #include "key.h"
+#include "ZTM.h"
 
 void usb_port_set(u8 enable);
 void USBD_Init(void);

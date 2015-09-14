@@ -13,7 +13,7 @@ void Fatfs_init(void)
   printf("\r\n FATFS init! \r\n");
   
   
-  f_mount(fs[0],"0:",1); 					//挂载FLASH.	  
+  f_mount(fs[0],"0:",0); 					//挂载FLASH.	  
   
   
   //W25Q64检测,如果不存在文件系统,则先创建.
@@ -45,6 +45,8 @@ void Fatfs_init(void)
   
   
 }
+
+
 
 
 u8 isFileExist(void)

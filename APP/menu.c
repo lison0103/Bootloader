@@ -249,18 +249,26 @@ void menu_pocess(void)
 
 #else
 
-void Lcd_init(void)
+void menu_init(void)
 {
   
-  delay_ms(1000);  //不延时拔掉仿真器没显示
+//  delay_ms(1000);  //不延时拔掉仿真器没显示
   ZTM_FullScreenImageDisp(300);
   delay_ms(5);
+                   while(!LCM_HandOn_Check())
+                   printf("LCM_HandOn_Check\r\n");
   ZTM_RectangleFill (0, 280,239, 319,DGRAY); 
   delay_ms(5);
+                   while(!LCM_HandOn_Check())
+                   printf("LCM_HandOn_Check\r\n");
   TXM_StringDisplay(0,10,290,24,0,RED ,WHITE, "语言");       
   delay_ms(5);  
+                   while(!LCM_HandOn_Check())
+                   printf("LCM_HandOn_Check\r\n");
   TXM_StringDisplay(0,30,50,24,1,YELLOW ,BLUE,  " POWER:进入APP   ");
   delay_ms(5);  
+                   while(!LCM_HandOn_Check())
+                   printf("LCM_HandOn_Check\r\n");
   TXM_StringDisplay(0,30,100,24,1,YELLOW ,BLUE, " F1:连接电脑     ");
   delay_ms(5);  
   TXM_StringDisplay(0,30,150,24,1,YELLOW ,BLUE, " F2:更新APP      ");
@@ -277,6 +285,46 @@ void Lcd_init(void)
   
 }
 
+
+void enter_menu(void)
+{
+          u8 key = 0;
+          u8 timeover = 0;
+                  
+          while(1){
+            
+              key=key_scan();
+              if(key==KEY_POWER)			//KEY_POWER按键按下
+              {
+                delay_ms(200);
+                if(key==KEY_POWER){
+                  
+                  break;
+                  
+                  
+                }
+              }        
+              delay_ms(100);
+              timeover++;
+              printf("enter_menu:timeover = %d\r\n", timeover);
+              
+              if(timeover >= 20)
+              {
+                
+                  printf("开始执行FLASH用户代码!!\r\n");
+                  if(((*(vu32*)(FLASH_APP1_ADDR+4))&0xFF000000)==0x08000000)//判断是否为0X08XXXXXX.
+                  {	 
+                    iap_load_app(FLASH_APP1_ADDR);//执行FLASH APP代码
+                  }else 
+                  {
+                    printf("非FLASH应用程序,无法执行!\r\n");
+                    
+                  }
+                  
+              }
+          }
+          
+}
 
 
 
@@ -304,6 +352,8 @@ void menu_pocess(void)
                 printf("\r\n初始化USB!!\r\n");
                 UsbMassStor_init();
                 
+//                f_mount(NULL,"0:",1); 
+                
               }
             } 
             else if(key==KEY_F2)			//KEY_F2按键按下
@@ -312,8 +362,8 @@ void menu_pocess(void)
               delay_ms(200);
               if(key==KEY_F2){
                 
-                
-                delay_ms(1500); 
+//                 while(!LCM_HandOn_Check())
+//                   printf("LCM_HandOn_Check\r\n");
                 TXM_StringDisplay(0,20,250,24,1,RED ,BLUE, "状态：选择更新APP");
                 delay_ms(5); 
                 TXM_StringDisplay(0,30,150,24,1,YELLOW ,RED, " F2:更新APP      ");
@@ -351,8 +401,7 @@ void menu_pocess(void)
               delay_ms(200);
               if(key==KEY_POWER){
                 
-                delay_ms(1000); 
-                TXM_StringDisplay(0,20,250,24,1,RED ,BLUE, " 状态：选择进入APP");
+                TXM_StringDisplay(0,20,250,24,1,RED ,BLUE, " 状态：选择进入APP ");
                 delay_ms(5);                
                 TXM_StringDisplay(0,30,50,24,1,YELLOW ,RED,  " POWER:进入APP   ");
                 delay_ms(1000);

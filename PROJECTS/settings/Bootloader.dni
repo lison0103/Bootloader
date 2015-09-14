@@ -9,7 +9,7 @@ TriggerName=main
 LimitSize=0
 ByteLimit=50
 [DebugChecksum]
-Checksum=-2088365329
+Checksum=-1195574549
 [Exceptions]
 StopOnUncaught=_ 0
 StopOnThrow=_ 0
@@ -87,23 +87,13 @@ GraphEnabled=0
 ShowTimeLog=1
 ShowTimeSum=1
 SumSortOrder=0
-[Disassemble mode]
-mode=0
-[Breakpoints2]
-Bp0=_ 0 "EMUL_DATA" "ZTM_RectangleFill" 0 0 0 0 4294967295
-Count=1
 [Log file]
 LoggingEnabled=_ 0
 LogFile=_ ""
 Category=_ 0
-[Aliases]
-A0=_ "E:\lison chan\my_program\du fatfs\FATFS\exfuns\exfuns.c" ""
-A1=_ "E:\lison chan\my_program\du fatfs\PROJECTS\startup_stm32f10x_hd.s" ""
-A2=_ "E:\lison chan\my_program\du fatfs\PROJECTS\stm32f10x_it.c" ""
-A3=_ "E:\lison chan\my_program\du fatfs\USB\CONFIG\usb_endp.c" ""
-A4=_ "E:\lison chan\my_program\du fatfs\USB\CONFIG\usb_pwr.c" ""
-Count=5
-SuppressDialog=0
+[TermIOLog]
+LoggingEnabled=_ 0
+LogFile=_ ""
 [Trace2]
 Enabled=0
 ShowSource=0
@@ -128,6 +118,16 @@ Mode=3
 Graph=0
 Symbiont=0
 Exclusions=
-[TermIOLog]
-LoggingEnabled=_ 0
-LogFile=_ ""
+[Disassemble mode]
+mode=0
+[Breakpoints2]
+Bp0=_ 0 "EMUL_DATA" "ZTM_RectangleFill" 0 0 0 0 4294967295
+Count=1
+[Aliases]
+A0=_ "E:\lison chan\my_program\du fatfs\FATFS\exfuns\exfuns.c" ""
+A1=_ "E:\lison chan\my_program\du fatfs\PROJECTS\startup_stm32f10x_hd.s" ""
+A2=_ "E:\lison chan\my_program\du fatfs\PROJECTS\stm32f10x_it.c" ""
+A3=_ "E:\lison chan\my_program\du fatfs\USB\CONFIG\usb_endp.c" ""
+A4=_ "E:\lison chan\my_program\du fatfs\USB\CONFIG\usb_pwr.c" ""
+Count=5
+SuppressDialog=0

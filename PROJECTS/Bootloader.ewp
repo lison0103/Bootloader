@@ -1873,6 +1873,9 @@
       <name>$PROJ_DIR$\..\APP\fatfs.c</name>
     </file>
     <file>
+      <name>$PROJ_DIR$\..\APP\lcd.c</name>
+    </file>
+    <file>
       <name>$PROJ_DIR$\..\APP\menu.c</name>
     </file>
     <file>

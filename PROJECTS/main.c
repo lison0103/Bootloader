@@ -9,6 +9,7 @@
 #include "menu.h"
 #include "usb.h"
 #include "fatfs.h"
+#include "lcd.h"
 
 
 
@@ -35,10 +36,13 @@ int main(void)
         USART1_Init();
         USART2_Init();
         
-        RTCC_Init();
-
+        RTCC_Init();      
         
-        Lcd_init();
+        
+        LCM_Init();
+        enter_menu();
+        
+        menu_init();
         
         Cpu_LockID = GetLockCode();
         printf("Cpu_LockID = %x\r\n",Cpu_LockID);
@@ -46,7 +50,6 @@ int main(void)
         printf("Confirm_word = %d\r\n",Cpu_LockID/1000 + Current_Date);
         
         printf("password = %d\r\n",(Cpu_LockID/1000 + Current_Date)*2 + 3);
-        
 
 /********************************************************************************************/	
                

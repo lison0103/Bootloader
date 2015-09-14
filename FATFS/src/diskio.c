@@ -8,7 +8,6 @@
 /*-----------------------------------------------------------------------*/
 
 #include "diskio.h"		/* FatFs lower layer API */
-#include "mmc_sd.h"
 #include "flash.h"
 #include "malloc.h"		
 

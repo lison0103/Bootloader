@@ -30,7 +30,7 @@
 #include "platform_config.h" 
 #include "mass_mal.h"
 #include "flash.h"
-#include "mmc_sd.h"
+
 
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/

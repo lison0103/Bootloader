@@ -1,5 +1,4 @@
 #include "fattester.h"	 
-#include "mmc_sd.h"
 #include "usmart.h"
 #include "usart.h"
 #include "exfuns.h"

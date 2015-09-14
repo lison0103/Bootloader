@@ -10,6 +10,9 @@ const u8 *Menu_Item_Descrip[][2] =
   
 };
 
+u8 TimeBuff[6];
+u32 Current_Date;
+
 void RCC_init(void)
 {
   
@@ -267,6 +270,11 @@ void Lcd_init(void)
   TXM_StringDisplay(0,20,250,24,1,RED ,BLUE,    " 状态： 请选择   ");
   delay_ms(5); 
   
+              RTCC_GetTime(TimeBuff);
+              Current_Date = GetDate(TimeBuff);
+              
+              printf("Current_Date = %d\r\n", Current_Date);
+  
 }
 
 
@@ -275,9 +283,10 @@ void Lcd_init(void)
 void menu_pocess(void)
 {
             u8 key = 0;
-            
-
-            
+  
+            RTCC_GetTime(TimeBuff);
+            time_display(307, 308, TimeBuff);
+  
             key=key_scan();
             if(key==KEY_F1)			//KEY_F1按键按下
             {

@@ -1876,6 +1876,9 @@
       <name>$PROJ_DIR$\..\APP\menu.c</name>
     </file>
     <file>
+      <name>$PROJ_DIR$\..\APP\time_display.c</name>
+    </file>
+    <file>
       <name>$PROJ_DIR$\..\APP\usb.c</name>
     </file>
   </group>
@@ -1983,6 +1986,9 @@
   </group>
   <group>
     <name>HARDWARE</name>
+    <file>
+      <name>$PROJ_DIR$\..\HARDWARE\bsp_rtc_1302.c</name>
+    </file>
     <file>
       <name>$PROJ_DIR$\..\HARDWARE\flash.c</name>
     </file>

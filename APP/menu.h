@@ -10,6 +10,8 @@
 #include "usart.h"
 #include "usb.h"
 #include "fatfs.h"
+#include "bsp_rtc_1302.h"
+#include "time_display.h"
 
 #if 0
 

@@ -1,6 +1,7 @@
 #ifndef __SYS_H
 #define __SYS_H	
 #include "stm32f10x.h"
+#include "usart.h"
 //////////////////////////////////////////////////////////////////////////////////	 
 //本程序只供学习使用，未经作者许可，不得用于其它任何用途
 //ALIENTEK STM32开发板		   
@@ -67,6 +68,7 @@
 
 
 void NVIC_Configuration(void);
+u32 GetLockCode(void);
 
 //以下为汇编函数
 void WFI_SET(void);		//执行WFI指令

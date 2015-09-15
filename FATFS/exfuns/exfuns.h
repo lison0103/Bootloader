@@ -15,13 +15,13 @@
 //All rights reserved									  
 //////////////////////////////////////////////////////////////////////////////////
 
-extern FATFS *fs[2];  
-extern FIL *file;	 
-extern FIL *ftemp;	 
+extern FATFS *fs[1];  
+//extern FIL *file;	 
+//extern FIL *ftemp;	 
 extern UINT br,bw;
 extern FILINFO fileinfo;
 extern DIR dir;
-extern u8 *fatbuf;//SD卡数据缓存区
+//extern u8 *fatbuf;//SD卡数据缓存区
 
 
 //f_typetell返回的类型定义

@@ -33,7 +33,7 @@ int main(void)
         SPI_Flash_Init();
         
         RCC_init();                  
-        USART1_Init();
+        NVIC_Configuration_Usart();
         USART2_Init();
         
         RTCC_Init();      

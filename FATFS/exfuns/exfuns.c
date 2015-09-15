@@ -5,6 +5,7 @@
 #include "usart.h"
 
 
+
  //文件类型列表
 const u8 *FILE_TYPE_TBL[6][13]=
 {
@@ -16,7 +17,7 @@ const u8 *FILE_TYPE_TBL[6][13]=
 {"BMP","JPG","JPEG","GIF"},//图片文件
 };
 ///////////////////////////////公共文件区,使用malloc的时候////////////////////////////////////////////
-FATFS *fs[2];  		//逻辑磁盘工作区.	 
+FATFS *fs[1];  		//逻辑磁盘工作区.	 
 FIL *file;	  		//文件1
 FIL *ftemp;	  		//文件2.
 UINT br,bw;			//读写变量
@@ -31,11 +32,11 @@ u8 *fatbuf;			//SD卡数据缓存区
 u8 exfuns_init(void)
 {
 	fs[0]=(FATFS*)mymalloc(sizeof(FATFS));	//为磁盘0工作区申请内存	
-	fs[1]=(FATFS*)mymalloc(sizeof(FATFS));	//为磁盘1工作区申请内存
-	file=(FIL*)mymalloc(sizeof(FIL));		//为file申请内存
-	ftemp=(FIL*)mymalloc(sizeof(FIL));		//为ftemp申请内存
-	fatbuf=(u8*)mymalloc(512);				//为fatbuf申请内存
-	if(fs[0]&&fs[1]&&file&&ftemp&&fatbuf)return 0;  //申请有一个失败,即失败.
+//	fs[1]=(FATFS*)mymalloc(sizeof(FATFS));	//为磁盘1工作区申请内存
+//	file=(FIL*)mymalloc(sizeof(FIL));		//为file申请内存
+//	ftemp=(FIL*)mymalloc(sizeof(FIL));		//为ftemp申请内存
+//	fatbuf=(u8*)mymalloc(512);				//为fatbuf申请内存
+	if(fs[0])return 0;  //申请有一个失败,即失败.
 	else return 1;	
 }
 

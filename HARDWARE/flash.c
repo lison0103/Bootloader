@@ -20,11 +20,11 @@ void SPI_Flash_Init(void)
 
   	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA, ENABLE );
 
-	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_2|GPIO_Pin_3|GPIO_Pin_4;  //SPI CS
+	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_4;  //SPI CS
  	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;  //复用推挽输出
 	GPIO_InitStructure.GPIO_Speed=GPIO_Speed_50MHz;
  	GPIO_Init(GPIOA, &GPIO_InitStructure);
- 	GPIO_SetBits(GPIOA,GPIO_Pin_2|GPIO_Pin_3|GPIO_Pin_4);
+ 	GPIO_SetBits(GPIOA,GPIO_Pin_4);
 
 	SPI1_Init();		   //初始化SPI
 	SPI1_SetSpeed(SPI_BaudRatePrescaler_4);	//设置为18M时钟,高速模式

@@ -177,7 +177,6 @@ void UsbMassStor_init(void)
  	Set_USBClock();   
  	USB_Init();
         
-
         
 	while(1)
 	{	
@@ -190,9 +189,9 @@ void UsbMassStor_init(void)
                   if(key==KEY_F3){
                      
                     
-                    TXM_StringDisplay(0,20,250,24,1,RED ,BLUE, "状态：选择断开电脑");
+                    TXM_StringDisplay(0,20,250,24,1,RED ,BLUE, "状态：已断开电脑  ");
                     delay_ms(5); 
-                    TXM_StringDisplay(0,30,200,24,1,YELLOW ,RED, " F3:断开电脑连接 ");
+//                    TXM_StringDisplay(0,30,200,24,1,YELLOW ,RED, " F3:断开电脑连接 ");
                     printf("\r\n exit usb mass \r\n");
                     break;
                   }
@@ -203,11 +202,13 @@ void UsbMassStor_init(void)
 			//清除显示			  	   
 			if(USB_STATUS_REG&0x01)//正在写		  
 			{
-				//提示USB正在写入数据	 
+				//提示USB正在写入数据	
+//                          TXM_StringDisplay(0,20,250,24,1,RED ,BLUE, "状态：正在写入数据");
 			}
 			if(USB_STATUS_REG&0x02)//正在读
 			{
-				//提示USB正在读出数据  		 
+				//提示USB正在读出数据 
+//                          TXM_StringDisplay(0,20,250,24,1,RED ,BLUE, "状态：正在读出数据");
 			}	 										  
 			if(USB_STATUS_REG&0x04){}//提示写入错误
 			else {}//清除显示	  
@@ -217,8 +218,17 @@ void UsbMassStor_init(void)
 		}
 		if(Divece_STA!=bDeviceState) 
 		{
-			if(bDeviceState==CONFIGURED){}//提示USB连接已经建立
-			else {}//提示USB被拔出了
+			if(bDeviceState==CONFIGURED)
+                        {
+                          //提示USB连接已经建立
+                          
+                          TXM_StringDisplay(0,20,250,24,1,RED ,BLUE, "状态：USB已连接   ");  
+                        }
+			else 
+                        {
+                          //提示USB被拔出了
+                          TXM_StringDisplay(0,20,250,24,1,RED ,BLUE, "状态：USB被拔出了 "); 
+                        }
 			Divece_STA=bDeviceState;
 		}
 		tct++;
@@ -229,7 +239,8 @@ void UsbMassStor_init(void)
 			{
 				offline_cnt=0;//USB连接了,则清除offline计数器
 				bDeviceState=CONFIGURED;
-			}else//没有得到轮询 
+			}
+                        else//没有得到轮询 
 			{
 				offline_cnt++;  
 				if(offline_cnt>10)bDeviceState=UNCONNECTED;//2s内没收到在线标记,代表USB被拔出了

@@ -11,7 +11,7 @@ const u8 *Menu_Item_Descrip[][2] =
 };
 
 u8 TimeBuff[6];
-u32 Current_Date;
+//u32 Current_Date;
 
 void RCC_init(void)
 {
@@ -254,33 +254,25 @@ void menu_init(void)
 //  delay_ms(1000);  //不延时拔掉仿真器没显示
   ZTM_FullScreenImageDisp(300);
   delay_ms(5);
-                   while(!LCM_HandOn_Check())
-                   printf("LCM_HandOn_Check\r\n");
   ZTM_RectangleFill (0, 280,239, 319,DGRAY); 
   delay_ms(5);
-                   while(!LCM_HandOn_Check())
-                   printf("LCM_HandOn_Check\r\n");
   TXM_StringDisplay(0,10,290,24,0,RED ,WHITE, "语言");       
   delay_ms(5);  
-                   while(!LCM_HandOn_Check())
-                   printf("LCM_HandOn_Check\r\n");
   TXM_StringDisplay(0,30,50,24,1,YELLOW ,BLUE,  " POWER:进入APP   ");
   delay_ms(5);  
-                   while(!LCM_HandOn_Check())
-                   printf("LCM_HandOn_Check\r\n");
   TXM_StringDisplay(0,30,100,24,1,YELLOW ,BLUE, " F1:连接电脑     ");
   delay_ms(5);  
   TXM_StringDisplay(0,30,150,24,1,YELLOW ,BLUE, " F2:更新APP      ");
   delay_ms(5);  
   TXM_StringDisplay(0,30,200,24,1,YELLOW ,BLUE, " F3:断开电脑连接 ");
   delay_ms(5);  
-  TXM_StringDisplay(0,20,250,24,1,RED ,BLUE,    " 状态： 请选择   ");
+  TXM_StringDisplay(0,20,250,24,1,RED ,BLUE,    " 状态： 请选择    ");
   delay_ms(5); 
   
-              RTCC_GetTime(TimeBuff);
-              Current_Date = GetDate(TimeBuff);
-              
-              printf("Current_Date = %d\r\n", Current_Date);
+//              RTCC_GetTime(TimeBuff);
+//              Current_Date = GetDate(TimeBuff);
+//              
+//              printf("Current_Date = %d\r\n", Current_Date);
   
 }
 
@@ -307,16 +299,18 @@ void enter_menu(void)
               timeover++;
               printf("enter_menu:timeover = %d\r\n", timeover);
               
-              if(timeover >= 20)
+              if(timeover >= 10)
               {
                 
                   printf("开始执行FLASH用户代码!!\r\n");
                   if(((*(vu32*)(FLASH_APP1_ADDR+4))&0xFF000000)==0x08000000)//判断是否为0X08XXXXXX.
                   {	 
                     iap_load_app(FLASH_APP1_ADDR);//执行FLASH APP代码
-                  }else 
+                  }
+                  else 
                   {
                     printf("非FLASH应用程序,无法执行!\r\n");
+                    break;
                     
                   }
                   
@@ -341,9 +335,9 @@ void menu_pocess(void)
               delay_ms(200);
               if(key==KEY_F1){
                 
-                TXM_StringDisplay(0,20,250,24,1,RED ,BLUE, "状态：选择连接电脑");
+                TXM_StringDisplay(0,20,250,24,1,RED ,BLUE, "状态：连接电脑  ");
                 delay_ms(5); 
-                TXM_StringDisplay(0,30,100,24,1,YELLOW ,RED, " F1:连接电脑     ");
+//                TXM_StringDisplay(0,30,100,24,1,YELLOW ,RED, " F1:连接电脑     ");
                 
                 printf("\r\n初始化FATFS!!\r\n");
                 Fatfs_init();
@@ -351,7 +345,7 @@ void menu_pocess(void)
                 printf("\r\n初始化USB!!\r\n");
                 UsbMassStor_init();
                 
-//                f_mount(NULL,"0:",1); 
+//                f_mount(NULL,"0:",1); //卸载
                 
               }
             } 
@@ -361,11 +355,9 @@ void menu_pocess(void)
               delay_ms(200);
               if(key==KEY_F2){
                 
-//                 while(!LCM_HandOn_Check())
-//                   printf("LCM_HandOn_Check\r\n");
-                TXM_StringDisplay(0,20,250,24,1,RED ,BLUE, "状态：选择更新APP");
+                TXM_StringDisplay(0,20,250,24,1,RED ,BLUE, "状态：开始更新APP ");
                 delay_ms(5); 
-                TXM_StringDisplay(0,30,150,24,1,YELLOW ,RED, " F2:更新APP      ");
+//                TXM_StringDisplay(0,30,150,24,1,YELLOW ,RED, " F2:更新APP      ");
                 
                 printf("初始化FATFS!!\r\n");
                 Fatfs_init();
@@ -380,15 +372,18 @@ void menu_pocess(void)
                     //iap_write_appbin(FLASH_APP1_ADDR,USART_RX_BUF,10);//更新FLASH代码   
                     
                     
-                    
+                    TXM_StringDisplay(0,20,250,24,1,RED ,BLUE, "状态：APP更新完成 ");
                     printf("固件更新完成!\r\n");	
-                  }else 
+                  }
+                  else 
                   {
-                    
+                    TXM_StringDisplay(0,20,250,24,1,RED ,BLUE, "状态：更新失败    ");
                     printf("非FLASH应用程序!\r\n");
                   }
-                }else 
+                }
+                else 
                 {
+                  TXM_StringDisplay(0,20,250,24,1,RED ,BLUE, "状态：无可更新固件");
                   printf("没有可以更新的固件!\r\n");
                   
                 }
@@ -400,9 +395,9 @@ void menu_pocess(void)
               delay_ms(200);
               if(key==KEY_POWER){
                 
-                TXM_StringDisplay(0,20,250,24,1,RED ,BLUE, " 状态：选择进入APP ");
+                TXM_StringDisplay(0,20,250,24,1,RED ,BLUE, " 状态：进入APP  ");
                 delay_ms(5);                
-                TXM_StringDisplay(0,30,50,24,1,YELLOW ,RED,  " POWER:进入APP   ");
+//                TXM_StringDisplay(0,30,50,24,1,YELLOW ,RED,  " POWER:进入APP   ");
                 delay_ms(1000);
                 
                 printf("开始执行FLASH用户代码!!\r\n");
@@ -412,6 +407,7 @@ void menu_pocess(void)
                 }else 
                 {
                   printf("非FLASH应用程序,无法执行!\r\n");
+                  TXM_StringDisplay(0,20,250,24,1,RED ,BLUE, " 状态：无APP程序   ");
                   
                 }	
                 

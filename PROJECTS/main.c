@@ -15,9 +15,9 @@
 
 
 
-u32 Cpu_LockID;
-
-extern u32 Current_Date;
+//u32 Cpu_LockID;
+//
+//extern u32 Current_Date;
 
 
 int main(void)
@@ -44,12 +44,12 @@ int main(void)
         
         menu_init();
         
-        Cpu_LockID = GetLockCode();
-        printf("Cpu_LockID = %x\r\n",Cpu_LockID);
-        
-        printf("Confirm_word = %d\r\n",Cpu_LockID/1000 + Current_Date);
-        
-        printf("password = %d\r\n",(Cpu_LockID/1000 + Current_Date)*2 + 3);
+//        Cpu_LockID = GetLockCode();
+//        printf("Cpu_LockID = %x\r\n",Cpu_LockID);
+//        
+//        printf("Confirm_word = %d\r\n",Cpu_LockID/1000 + Current_Date);
+//        
+//        printf("password = %d\r\n",(Cpu_LockID/1000 + Current_Date)*2 + 3);
 
 /********************************************************************************************/	
                

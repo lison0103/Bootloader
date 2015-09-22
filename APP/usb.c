@@ -207,14 +207,11 @@ void UsbMassStor_init(void)
                 {
                                
                   delay_ms(50);
-                  if(key==KEY_RIGHT){
-                     
-                    
-                    TXM_StringDisplay(0,20,250,24,1,RED ,BLUE, (void*)Status_Item_Descrip[8][LANGUAGE]);
-                    delay_ms(5); 
-                    menu_init(3);
-                    printf("\r\n exit usb mass \r\n");
-                    break;
+                  if(key==KEY_RIGHT)
+                  {                                         
+                      menu_init(3);
+                      printf("\r\n exit usb mass \r\n");
+                      break;
                   }
                 }
                 

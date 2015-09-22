@@ -25,6 +25,7 @@ const u8 *Status_Item_Descrip[][2] =
   {"状态：已断开电脑  "," Status:Disconnect"},
   {"状态：USB已连接   "," Status:  Connect "},
   {"状态：USB被拔出了 "," Status:Disconnect"},
+  {"状态：非合法程序  "," Status:  Illegal "},
 };
 
 u8 *Version = {"V0.1"};
@@ -274,7 +275,7 @@ u8 LANGUAGE = 0;
 void menu_init(u8 item)
 {
   
-  if(0 == item)
+  if(0 == item)//菜单初始化
   {
       ZTM_FullScreenImageDisp(300);
       delay_ms(5);
@@ -296,7 +297,7 @@ void menu_init(u8 item)
       delay_ms(5);      
   
   }
-  else if(1 == item)
+  else if(1 == item)//语言切换
   {
       ZTM_RectangleFill (0, 280,239, 319,DGRAY); 
       delay_ms(5);
@@ -312,7 +313,7 @@ void menu_init(u8 item)
       delay_ms(5);      
   
   }
-  else if(2 == item)
+  else if(2 == item)//选择连接电脑
   {
       for(u8 i = 0;i < 4;i++)
       {
@@ -320,9 +321,11 @@ void menu_init(u8 item)
         delay_ms(5);                
       }  
       TXM_StringDisplay(0,30,70,24,1,YELLOW ,RED,  (void*)Menu_Item_Descrip[1][LANGUAGE]);
-      delay_ms(5);  
+      delay_ms(5); 
+      TXM_StringDisplay(0,20,250,24,1,RED ,BLUE, (void*)Status_Item_Descrip[1][LANGUAGE]);
+      delay_ms(5);       
   }  
-  else if(3 == item)
+  else if(3 == item)//选择断开电脑
   {
 
       for(u8 i = 0;i < 4;i++)
@@ -332,9 +335,10 @@ void menu_init(u8 item)
       }    
       TXM_StringDisplay(0,30,115,24,1,YELLOW ,RED,  (void*)Menu_Item_Descrip[2][LANGUAGE]);
       delay_ms(5);      
-  
+      TXM_StringDisplay(0,20,250,24,1,RED ,BLUE, (void*)Status_Item_Descrip[8][LANGUAGE]);
+      delay_ms(5);  
   } 
-  else if(4 == item)
+  else if(4 == item)//选择更新APP
   {
 
       for(u8 i = 0;i < 4;i++)
@@ -343,10 +347,12 @@ void menu_init(u8 item)
         delay_ms(5);                
       }   
       TXM_StringDisplay(0,30,160,24,1,YELLOW ,RED,  (void*)Menu_Item_Descrip[3][LANGUAGE]);
-      delay_ms(5);       
+      delay_ms(5);
+      TXM_StringDisplay(0,20,250,24,1,RED ,BLUE, (void*)Status_Item_Descrip[2][LANGUAGE]);
+      delay_ms(5); 
   
   } 
-  else if(5 == item)
+  else if(5 == item)//选择进入APP
   {
 
       for(u8 i = 0;i < 4;i++)
@@ -356,7 +362,8 @@ void menu_init(u8 item)
       }   
       TXM_StringDisplay(0,30,205,24,1,YELLOW ,RED,  (void*)Menu_Item_Descrip[4][LANGUAGE]);
       delay_ms(5);      
-  
+      TXM_StringDisplay(0,20,250,24,1,RED ,BLUE, (void*)Status_Item_Descrip[6][LANGUAGE]);
+      delay_ms(5);  
   }   
 
 
@@ -382,9 +389,7 @@ void enter_menu(void)
                 delay_ms(50);
                 if(key==KEY_F1){
                   
-                  break;
-                  
-                  
+                  break;                                   
                 }
               }        
               delay_ms(100);
@@ -392,8 +397,7 @@ void enter_menu(void)
               printf("enter_menu:timeover = %d\r\n", timeover);
               
               if(timeover >= 10)
-              {
-                
+              {                
                   printf("开始执行FLASH用户代码!!\r\n");
                   if(((*(vu32*)(FLASH_APP1_ADDR+4))&0xFF000000)==0x08000000)//判断是否为0X08XXXXXX.
                   {	 
@@ -407,8 +411,7 @@ void enter_menu(void)
                   }
                   
               }
-          }
-          
+          }          
 }
 
 
@@ -435,17 +438,15 @@ void menu_pocess(void)
             {
               
               delay_ms(50);
-              if(key==KEY_LEFT){
-                
-                TXM_StringDisplay(0,20,250,24,1,RED ,BLUE, (void*)Status_Item_Descrip[1][LANGUAGE]);
-                delay_ms(5); 
-                menu_init(2);
-                
-                printf("\r\n初始化FATFS!!\r\n");
-                Fatfs_init();
-                
-                printf("\r\n初始化USB!!\r\n");
-                UsbMassStor_init();
+              if(key==KEY_LEFT)
+              {               
+                  menu_init(2);
+                  
+                  printf("\r\n初始化FATFS!!\r\n");
+                  Fatfs_init();
+                  
+                  printf("\r\n初始化USB!!\r\n");
+                  UsbMassStor_init();
                 
 //                f_mount(NULL,"0:",1); //卸载
                 
@@ -455,10 +456,8 @@ void menu_pocess(void)
             {
               
               delay_ms(50);
-              if(key==KEY_UP){
-                
-                  TXM_StringDisplay(0,20,250,24,1,RED ,BLUE, (void*)Status_Item_Descrip[2][LANGUAGE]);
-                  delay_ms(5); 
+              if(key==KEY_UP)
+              {                
                   menu_init(4);
                   
                   printf("初始化FATFS!!\r\n");
@@ -468,33 +467,56 @@ void menu_pocess(void)
                       Bulk_Data_Buff=mymalloc(BULK_MAX_PACKET_SIZE);	            
                   #endif
                   
-                  Fatfs_init();
-                  
-                  
-                  if(!isFileExist())//判断固件是否存在
+                  u8 count = 3;
+                  u8 res = 0;
+                      
+                  while(count)//失败重试三次
                   {
-                    
-                      printf("开始更新固件...\r\n");	
+                      
+                      Fatfs_init();
                       
                       
-                      if(!UpdateApp())//从spi flash复制APP到stmflash中
-                      {	                                       
-                          TXM_StringDisplay(0,20,250,24,1,RED ,BLUE, (void*)Status_Item_Descrip[3][LANGUAGE]);
-                          printf("固件更新完成!\r\n");	
+                      if(!isFileExist())//判断固件是否存在
+                      {
+                        
+                          printf("开始更新固件...\r\n");	
+                          
+                          res = UpdateApp();
+                          if(!res)//从spi flash复制APP到stmflash中
+                          {	                                       
+                              TXM_StringDisplay(0,20,250,24,1,RED ,BLUE, (void*)Status_Item_Descrip[3][LANGUAGE]);//状态：APP更新完成
+                              printf("固件更新完成!\r\n");	
+//                              break;
+                              delay_ms(1000);
+                              if(((*(vu32*)(FLASH_APP1_ADDR+4))&0xFF000000)==0x08000000)//判断是否为0X08XXXXXX.
+                              {	 
+                                  iap_load_app(FLASH_APP1_ADDR);//执行FLASH APP代码
+                              }
+                              else 
+                              {
+                                  printf("非FLASH应用程序,无法执行!\r\n");
+                                  TXM_StringDisplay(0,20,250,24,1,RED ,BLUE, (void*)Status_Item_Descrip[7][LANGUAGE]);//状态：无APP程序                   
+                              }
+                          }
+                          else if(FR_INVALID_OBJECT == res)
+                          {
+                              TXM_StringDisplay(0,20,250,24,1,RED ,BLUE, (void*)Status_Item_Descrip[11][LANGUAGE]);//状态：非合法程序  
+                          
+                          }
+                          else 
+                          {
+                              TXM_StringDisplay(0,20,250,24,1,RED ,BLUE, (void*)Status_Item_Descrip[4][LANGUAGE]);//状态：更新失败
+                              printf("非FLASH应用程序!\r\n");
+                          }
                       }
                       else 
                       {
-                          TXM_StringDisplay(0,20,250,24,1,RED ,BLUE, (void*)Status_Item_Descrip[4][LANGUAGE]);
-                          printf("非FLASH应用程序!\r\n");
+                          TXM_StringDisplay(0,20,250,24,1,RED ,BLUE, (void*)Status_Item_Descrip[5][LANGUAGE]);//状态：无可更新固件
+                          printf("没有可以更新的固件!\r\n");
+                          break;                        
                       }
+                      count--;
                   }
-                  else 
-                  {
-                    TXM_StringDisplay(0,20,250,24,1,RED ,BLUE, (void*)Status_Item_Descrip[5][LANGUAGE]);
-                    printf("没有可以更新的固件!\r\n");
-                    
-                  }
-                  
                   #if defined(USE_MYMALLOC)
                       myfree(Data_Buffer);
                       myfree(Bulk_Data_Buff);
@@ -505,31 +527,27 @@ void menu_pocess(void)
             else if(key==KEY_SET)			
             {
               delay_ms(50);
-              if(key==KEY_SET){
-                
-                TXM_StringDisplay(0,20,250,24,1,RED ,BLUE, (void*)Status_Item_Descrip[6][LANGUAGE]);
-                delay_ms(5);                
-                menu_init(5);
-                delay_ms(1000);
-                
-                printf("开始执行FLASH用户代码!!\r\n");
-                if(((*(vu32*)(FLASH_APP1_ADDR+4))&0xFF000000)==0x08000000)//判断是否为0X08XXXXXX.
-                {	 
-                  iap_load_app(FLASH_APP1_ADDR);//执行FLASH APP代码
-                }
-                else 
-                {
-                  printf("非FLASH应用程序,无法执行!\r\n");
-                  TXM_StringDisplay(0,20,250,24,1,RED ,BLUE, (void*)Status_Item_Descrip[7][LANGUAGE]);
+              if(key==KEY_SET)
+              {                               
+                  menu_init(5);
+                  delay_ms(1000);
                   
-                }	
-                
+                  printf("开始执行FLASH用户代码!!\r\n");
+                  if(((*(vu32*)(FLASH_APP1_ADDR+4))&0xFF000000)==0x08000000)//判断是否为0X08XXXXXX.
+                  {	 
+                      iap_load_app(FLASH_APP1_ADDR);//执行FLASH APP代码
+                  }
+                  else 
+                  {
+                      printf("非FLASH应用程序,无法执行!\r\n");
+                      TXM_StringDisplay(0,20,250,24,1,RED ,BLUE, (void*)Status_Item_Descrip[7][LANGUAGE]);//状态：无APP程序                   
+                  }	               
                 
               }
             }
             
 
-            delay_ms(10);
+//            delay_ms(10);
 }
 
 

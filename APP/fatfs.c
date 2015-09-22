@@ -83,6 +83,7 @@ u8 UpdateApp(void)
   u8 *tempbuf;
   u16 bread;
   u32 offx=0;
+  u8  flag = 0;
   
   fp = (FIL*)mymalloc(sizeof(FIL));	//分配内存
   tempbuf = mymalloc(4096);	//分配4096个字节空间
@@ -95,8 +96,17 @@ u8 UpdateApp(void)
       
       while(res==FR_OK)//死循环执行
       {
-        res=f_read(fp,tempbuf,4096,(UINT *)&bread);		//读取数据	 
+        res=f_read(fp,tempbuf,4096,(UINT *)&bread);		//读取数据	
         if(res!=FR_OK)break;								//执行错误
+        if(0 == flag)
+        {
+            flag = 1;
+            if(((*(vu32*)(tempbuf + 4))&0xFF000000)!=0x08000000)
+            {
+              res = FR_INVALID_OBJECT;
+              break;             
+            }
+        }
         iap_write_appbin(FLASH_APP1_ADDR + offx,tempbuf,4096);//更新FLASH代码 	  
         offx+=bread;
         if(bread!=4096)break;								//读完了.

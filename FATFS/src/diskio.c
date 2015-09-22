@@ -14,7 +14,7 @@
 
 #define EX_FLASH 0	//外部flash,卷标为0
 
-#define FLASH_SECTOR_SIZE 	512			  
+#define FLASH_SECTOR_SIZE 	4096			  
 //对于W25Q64 		 			    
 u16	    FLASH_SECTOR_COUNT= 8192;	//4M字节,默认为W25Q64
 #define FLASH_BLOCK_SIZE   	8     	//每个BLOCK有8个扇区

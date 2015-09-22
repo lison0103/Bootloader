@@ -173,7 +173,7 @@ void UsbMassStor_init(void)
         USBD_Init();
 
 #if defined(USE_MYMALLOC)	       
-	Data_Buffer=mymalloc(BULK_MAX_PACKET_SIZE*2*4);	//为USB数据缓存区申请内存
+	Data_Buffer=mymalloc(BULK_MAX_PACKET_SIZE*2*4*8);	//为USB数据缓存区申请内存
 	Bulk_Data_Buff=mymalloc(BULK_MAX_PACKET_SIZE);	//申请内存              
 #endif
         
@@ -188,7 +188,7 @@ void UsbMassStor_init(void)
         
 															  
  	 Mass_Memory_Size[0]=4*1024*1024;//后4.8M字节
-	 Mass_Block_Size[0] =512;//因为我们在Init里面设置了SD卡的操作字节为512个,所以这里一定是512个字节.
+	 Mass_Block_Size[0] =4096;//因为我们在Init里面设置了SD卡的操作字节为512个,所以这里一定是512个字节.
 	 Mass_Block_Count[0]=Mass_Memory_Size[0]/Mass_Block_Size[0];
 	 
 	

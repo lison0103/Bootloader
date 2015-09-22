@@ -2,13 +2,32 @@
 
 
 const u8 *Menu_Item_Descrip[][2] =
-{                                          
-  {" POWER:进入APP    "," POWER:Enter APP  "},
-  {" F1:连接电脑      "," F1:Connect to PC "},
-  {" F2:更新APP       "," F2:Update APP    "},
-  {" F3:断开电脑连接  "," F3:Disconnect PC "},
+{   
+  {"Lang","语言"},
+  {" SET:进入APP     "," SET:Enter APP   "},
+  {" ←:连接电脑     "," ←:Connect to PC"},
+  {" ↑:更新APP      "," ↑:Update APP   "},
+  {" →:断开电脑连接 "," →:Disconnect PC"},
   
 };
+
+const u8 *Status_Item_Descrip[][2] =
+{                                          
+  
+  {" 状态： 请选择    "," Status:  Select  "},
+  {"状态：连接电脑    "," Status: Connect  "},
+  {"状态：开始更新APP "," Status:  Update  "},
+  {"状态：APP更新完成 "," Status:  Finish  "},
+  {"状态：更新失败    "," Status:  Fail    "},
+  {"状态：无可更新固件"," Status: NO FILE  "},
+  {" 状态：进入APP    "," Status: Enter APP"},
+  {" 状态：无APP程序  "," Status:  NO APP  "},
+  {"状态：已断开电脑  "," Status:Disconnect"},
+  {"状态：USB已连接   "," Status:  Connect "},
+  {"状态：USB被拔出了 "," Status:Disconnect"},
+};
+
+
 
 u8 TimeBuff[6];
 //u32 Current_Date;
@@ -248,6 +267,8 @@ void menu_pocess(void)
 
 #else
 
+u8 LANGUAGE = 0;
+
 void menu_init(void)
 {
   
@@ -256,17 +277,18 @@ void menu_init(void)
   delay_ms(5);
   ZTM_RectangleFill (0, 280,239, 319,DGRAY); 
   delay_ms(5);
-  TXM_StringDisplay(0,10,290,24,0,RED ,WHITE, "语言");       
+  TXM_StringDisplay(0,180,290,24,0,RED ,WHITE, (void*)Menu_Item_Descrip[0][LANGUAGE]);       
   delay_ms(5);  
-  TXM_StringDisplay(0,30,50,24,1,YELLOW ,BLUE,  " POWER:进入APP   ");
+  TXM_StringDisplay(0,30,50,24,1,YELLOW ,BLUE,  (void*)Menu_Item_Descrip[1][LANGUAGE]);
   delay_ms(5);  
-  TXM_StringDisplay(0,30,100,24,1,YELLOW ,BLUE, " F1:连接电脑     ");
+  TXM_StringDisplay(0,30,100,24,1,YELLOW ,BLUE, (void*)Menu_Item_Descrip[2][LANGUAGE]);
   delay_ms(5);  
-  TXM_StringDisplay(0,30,150,24,1,YELLOW ,BLUE, " F2:更新APP      ");
+  TXM_StringDisplay(0,30,150,24,1,YELLOW ,BLUE, (void*)Menu_Item_Descrip[3][LANGUAGE]);
   delay_ms(5);  
-  TXM_StringDisplay(0,30,200,24,1,YELLOW ,BLUE, " F3:断开电脑连接 ");
+  TXM_StringDisplay(0,30,200,24,1,YELLOW ,BLUE, (void*)Menu_Item_Descrip[4][LANGUAGE]);
   delay_ms(5);  
-  TXM_StringDisplay(0,20,250,24,1,RED ,BLUE,    " 状态： 请选择    ");
+  TXM_StringDisplay(0,20,250,24,1,RED ,BLUE,    (void*)Status_Item_Descrip[0][LANGUAGE]);
+//  TXM_StringDisplay(0,20,250,24,1,RED ,BLUE,    " 状态：▲▼←→↓↑");
   delay_ms(5); 
   
 //              RTCC_GetTime(TimeBuff);
@@ -285,10 +307,10 @@ void enter_menu(void)
           while(1){
             
               key=key_scan();
-              if(key==KEY_POWER)			//KEY_POWER按键按下
+              if(key==KEY_F1)			//KEY_F1按键按下
               {
                 delay_ms(200);
-                if(key==KEY_POWER){
+                if(key==KEY_F1){
                   
                   break;
                   
@@ -329,13 +351,24 @@ void menu_pocess(void)
             time_display(307, 308, TimeBuff);
   
             key=key_scan();
-            if(key==KEY_F1)			//KEY_F1按键按下
+            if(key == KEY_F3)
+            {
+              delay_ms(50);
+              if(key == KEY_F3)
+              {
+                  LANGUAGE = (~LANGUAGE) & 0x01;
+                  delay_ms(500);
+                  menu_init();
+              
+              }
+            }
+            else if(key==KEY_LEFT)			//KEY_F1按键按下
             {
               
-              delay_ms(200);
-              if(key==KEY_F1){
+              delay_ms(50);
+              if(key==KEY_LEFT){
                 
-                TXM_StringDisplay(0,20,250,24,1,RED ,BLUE, "状态：连接电脑  ");
+                TXM_StringDisplay(0,20,250,24,1,RED ,BLUE, (void*)Status_Item_Descrip[1][LANGUAGE]);
                 delay_ms(5); 
 //                TXM_StringDisplay(0,30,100,24,1,YELLOW ,RED, " F1:连接电脑     ");
                 
@@ -349,13 +382,13 @@ void menu_pocess(void)
                 
               }
             } 
-            else if(key==KEY_F2)			//KEY_F2按键按下
+            else if(key==KEY_UP)			//KEY_F2按键按下
             {
               
-              delay_ms(200);
-              if(key==KEY_F2){
+              delay_ms(50);
+              if(key==KEY_UP){
                 
-                TXM_StringDisplay(0,20,250,24,1,RED ,BLUE, "状态：开始更新APP ");
+                TXM_StringDisplay(0,20,250,24,1,RED ,BLUE, (void*)Status_Item_Descrip[2][LANGUAGE]);
                 delay_ms(5); 
 //                TXM_StringDisplay(0,30,150,24,1,YELLOW ,RED, " F2:更新APP      ");
                 
@@ -372,30 +405,30 @@ void menu_pocess(void)
                     //iap_write_appbin(FLASH_APP1_ADDR,USART_RX_BUF,10);//更新FLASH代码   
                     
                     
-                    TXM_StringDisplay(0,20,250,24,1,RED ,BLUE, "状态：APP更新完成 ");
+                    TXM_StringDisplay(0,20,250,24,1,RED ,BLUE, (void*)Status_Item_Descrip[3][LANGUAGE]);
                     printf("固件更新完成!\r\n");	
                   }
                   else 
                   {
-                    TXM_StringDisplay(0,20,250,24,1,RED ,BLUE, "状态：更新失败    ");
+                    TXM_StringDisplay(0,20,250,24,1,RED ,BLUE, (void*)Status_Item_Descrip[4][LANGUAGE]);
                     printf("非FLASH应用程序!\r\n");
                   }
                 }
                 else 
                 {
-                  TXM_StringDisplay(0,20,250,24,1,RED ,BLUE, "状态：无可更新固件");
+                  TXM_StringDisplay(0,20,250,24,1,RED ,BLUE, (void*)Status_Item_Descrip[5][LANGUAGE]);
                   printf("没有可以更新的固件!\r\n");
                   
                 }
                 
               }
             }
-            else if(key==KEY_POWER)			//KEY_POWER按键按下
+            else if(key==KEY_SET)			//KEY_POWER按键按下
             {
-              delay_ms(200);
-              if(key==KEY_POWER){
+              delay_ms(50);
+              if(key==KEY_SET){
                 
-                TXM_StringDisplay(0,20,250,24,1,RED ,BLUE, " 状态：进入APP  ");
+                TXM_StringDisplay(0,20,250,24,1,RED ,BLUE, (void*)Status_Item_Descrip[6][LANGUAGE]);
                 delay_ms(5);                
 //                TXM_StringDisplay(0,30,50,24,1,YELLOW ,RED,  " POWER:进入APP   ");
                 delay_ms(1000);
@@ -407,7 +440,7 @@ void menu_pocess(void)
                 }else 
                 {
                   printf("非FLASH应用程序,无法执行!\r\n");
-                  TXM_StringDisplay(0,20,250,24,1,RED ,BLUE, " 状态：无APP程序   ");
+                  TXM_StringDisplay(0,20,250,24,1,RED ,BLUE, (void*)Status_Item_Descrip[7][LANGUAGE]);
                   
                 }	
                 

@@ -1,6 +1,9 @@
 #include "usb.h"
 
 
+extern u8 LANGUAGE;
+extern const u8 *Status_Item_Descrip[][2];
+
 void usb_port_set(u8 enable)
 {
   	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA,ENABLE);    //使能PORTA时钟	   	 
@@ -198,14 +201,14 @@ void UsbMassStor_init(void)
 	{	
                 delay_ms(1);	
                 key=key_scan();
-                if(key==KEY_F3)			
+                if(key==KEY_RIGHT)			
                 {
                                
                   delay_ms(200);
-                  if(key==KEY_F3){
+                  if(key==KEY_RIGHT){
                      
                     
-                    TXM_StringDisplay(0,20,250,24,1,RED ,BLUE, "状态：已断开电脑  ");
+                    TXM_StringDisplay(0,20,250,24,1,RED ,BLUE, (void*)Status_Item_Descrip[8][LANGUAGE]);
                     delay_ms(5); 
 //                    TXM_StringDisplay(0,30,200,24,1,YELLOW ,RED, " F3:断开电脑连接 ");
                     printf("\r\n exit usb mass \r\n");
@@ -238,12 +241,12 @@ void UsbMassStor_init(void)
                         {
                           //提示USB连接已经建立
                           
-                          TXM_StringDisplay(0,20,250,24,1,RED ,BLUE, "状态：USB已连接   ");  
+                          TXM_StringDisplay(0,20,250,24,1,RED ,BLUE, (void*)Status_Item_Descrip[9][LANGUAGE]);  
                         }
 			else 
                         {
                           //提示USB被拔出了
-                          TXM_StringDisplay(0,20,250,24,1,RED ,BLUE, "状态：USB被拔出了 "); 
+                          TXM_StringDisplay(0,20,250,24,1,RED ,BLUE, (void*)Status_Item_Descrip[10][LANGUAGE]); 
                         }
 			Divece_STA=bDeviceState;
 		}

@@ -3,6 +3,8 @@
 
 extern u8 LANGUAGE;
 extern const u8 *Status_Item_Descrip[][2];
+extern const u8 *Menu_Item_Descrip[][2];
+extern void menu_init(u8 item);
 
 void usb_port_set(u8 enable)
 {
@@ -204,13 +206,13 @@ void UsbMassStor_init(void)
                 if(key==KEY_RIGHT)			
                 {
                                
-                  delay_ms(200);
+                  delay_ms(50);
                   if(key==KEY_RIGHT){
                      
                     
                     TXM_StringDisplay(0,20,250,24,1,RED ,BLUE, (void*)Status_Item_Descrip[8][LANGUAGE]);
                     delay_ms(5); 
-//                    TXM_StringDisplay(0,30,200,24,1,YELLOW ,RED, " F3:断开电脑连接 ");
+                    menu_init(3);
                     printf("\r\n exit usb mass \r\n");
                     break;
                   }

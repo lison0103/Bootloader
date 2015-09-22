@@ -1,3 +1,11 @@
+/****************************************Copyright (c)****************************************************
+** File Name:           main.c
+** Created By:          lisonchen
+** Created date:        2015-09-08
+** Version:             v0.1
+** Descriptions:        Bootloader
+**
+*********************************************************************************************************/
 
 #include "delay.h"
 #include "sys.h"
@@ -44,7 +52,7 @@ int main(void)
         LCM_Init();
         enter_menu();
         
-        menu_init();
+        menu_init(0);
         
 //        Cpu_LockID = GetLockCode();
 //        printf("Cpu_LockID = %x\r\n",Cpu_LockID);

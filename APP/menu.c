@@ -4,10 +4,10 @@
 const u8 *Menu_Item_Descrip[][2] =
 {   
   {"Lang","语言"},
-  {" SET:进入APP     "," SET:Enter APP   "},
   {" ←:连接电脑     "," ←:Connect to PC"},
-  {" ↑:更新APP      "," ↑:Update APP   "},
   {" →:断开电脑连接 "," →:Disconnect PC"},
+  {" ↑:更新APP      "," ↑:Update APP   "},
+  {" SET:进入APP     "," SET:Enter APP   "},
   
 };
 
@@ -27,6 +27,7 @@ const u8 *Status_Item_Descrip[][2] =
   {"状态：USB被拔出了 "," Status:Disconnect"},
 };
 
+u8 *Version = {"V0.1"};
 
 
 u8 TimeBuff[6];
@@ -269,27 +270,96 @@ void menu_pocess(void)
 
 u8 LANGUAGE = 0;
 
-void menu_init(void)
+//菜单初始化
+void menu_init(u8 item)
 {
   
-//  delay_ms(1000);  //不延时拔掉仿真器没显示
-  ZTM_FullScreenImageDisp(300);
-  delay_ms(5);
-  ZTM_RectangleFill (0, 280,239, 319,DGRAY); 
-  delay_ms(5);
-  TXM_StringDisplay(0,180,290,24,0,RED ,WHITE, (void*)Menu_Item_Descrip[0][LANGUAGE]);       
-  delay_ms(5);  
-  TXM_StringDisplay(0,30,50,24,1,YELLOW ,BLUE,  (void*)Menu_Item_Descrip[1][LANGUAGE]);
-  delay_ms(5);  
-  TXM_StringDisplay(0,30,100,24,1,YELLOW ,BLUE, (void*)Menu_Item_Descrip[2][LANGUAGE]);
-  delay_ms(5);  
-  TXM_StringDisplay(0,30,150,24,1,YELLOW ,BLUE, (void*)Menu_Item_Descrip[3][LANGUAGE]);
-  delay_ms(5);  
-  TXM_StringDisplay(0,30,200,24,1,YELLOW ,BLUE, (void*)Menu_Item_Descrip[4][LANGUAGE]);
-  delay_ms(5);  
-  TXM_StringDisplay(0,20,250,24,1,RED ,BLUE,    (void*)Status_Item_Descrip[0][LANGUAGE]);
-//  TXM_StringDisplay(0,20,250,24,1,RED ,BLUE,    " 状态：▲▼←→↓↑");
-  delay_ms(5); 
+  if(0 == item)
+  {
+      ZTM_FullScreenImageDisp(300);
+      delay_ms(5);
+      ZTM_RectangleFill (0, 280,239, 319,DGRAY); 
+      delay_ms(5);
+      TXM_StringDisplay(0,180,290,24,0,RED ,WHITE, (void*)Menu_Item_Descrip[0][LANGUAGE]);       
+      delay_ms(5);  
+      
+      TXM_StringDisplay(0,5,35,16,0,BLACK ,BLUE,  (void*)Version);
+      delay_ms(5);                 
+      
+      for(u8 i = 0;i < 4;i++)
+      {
+        TXM_StringDisplay(0,30,70 + (i*45),24,1,YELLOW ,BLUE,  (void*)Menu_Item_Descrip[i+1][LANGUAGE]);
+        delay_ms(5);                
+      }
+      
+      TXM_StringDisplay(0,20,250,24,1,RED ,BLUE,    (void*)Status_Item_Descrip[0][LANGUAGE]);
+      delay_ms(5);      
+  
+  }
+  else if(1 == item)
+  {
+      ZTM_RectangleFill (0, 280,239, 319,DGRAY); 
+      delay_ms(5);
+      TXM_StringDisplay(0,180,290,24,0,RED ,WHITE, (void*)Menu_Item_Descrip[0][LANGUAGE]);       
+      delay_ms(5); 
+      
+      for(u8 i = 0;i < 4;i++)
+      {
+        TXM_StringDisplay(0,30,70 + (i*45),24,1,YELLOW ,BLUE,  (void*)Menu_Item_Descrip[i+1][LANGUAGE]);
+        delay_ms(5);                
+      }
+      TXM_StringDisplay(0,20,250,24,1,RED ,BLUE,    (void*)Status_Item_Descrip[0][LANGUAGE]);
+      delay_ms(5);      
+  
+  }
+  else if(2 == item)
+  {
+      for(u8 i = 0;i < 4;i++)
+      {
+        TXM_StringDisplay(0,30,70 + (i*45),24,1,YELLOW ,BLUE,  (void*)Menu_Item_Descrip[i+1][LANGUAGE]);
+        delay_ms(5);                
+      }  
+      TXM_StringDisplay(0,30,70,24,1,YELLOW ,RED,  (void*)Menu_Item_Descrip[1][LANGUAGE]);
+      delay_ms(5);  
+  }  
+  else if(3 == item)
+  {
+
+      for(u8 i = 0;i < 4;i++)
+      {
+        TXM_StringDisplay(0,30,70 + (i*45),24,1,YELLOW ,BLUE,  (void*)Menu_Item_Descrip[i+1][LANGUAGE]);
+        delay_ms(5);                
+      }    
+      TXM_StringDisplay(0,30,115,24,1,YELLOW ,RED,  (void*)Menu_Item_Descrip[2][LANGUAGE]);
+      delay_ms(5);      
+  
+  } 
+  else if(4 == item)
+  {
+
+      for(u8 i = 0;i < 4;i++)
+      {
+        TXM_StringDisplay(0,30,70 + (i*45),24,1,YELLOW ,BLUE,  (void*)Menu_Item_Descrip[i+1][LANGUAGE]);
+        delay_ms(5);                
+      }   
+      TXM_StringDisplay(0,30,160,24,1,YELLOW ,RED,  (void*)Menu_Item_Descrip[3][LANGUAGE]);
+      delay_ms(5);       
+  
+  } 
+  else if(5 == item)
+  {
+
+      for(u8 i = 0;i < 4;i++)
+      {
+        TXM_StringDisplay(0,30,70 + (i*45),24,1,YELLOW ,BLUE,  (void*)Menu_Item_Descrip[i+1][LANGUAGE]);
+        delay_ms(5);                
+      }   
+      TXM_StringDisplay(0,30,205,24,1,YELLOW ,RED,  (void*)Menu_Item_Descrip[4][LANGUAGE]);
+      delay_ms(5);      
+  
+  }   
+
+
   
 //              RTCC_GetTime(TimeBuff);
 //              Current_Date = GetDate(TimeBuff);
@@ -309,7 +379,7 @@ void enter_menu(void)
               key=key_scan();
               if(key==KEY_F1)			//KEY_F1按键按下
               {
-                delay_ms(200);
+                delay_ms(50);
                 if(key==KEY_F1){
                   
                   break;
@@ -357,12 +427,11 @@ void menu_pocess(void)
               if(key == KEY_F3)
               {
                   LANGUAGE = (~LANGUAGE) & 0x01;
+                  menu_init(1);
                   delay_ms(500);
-                  menu_init();
-              
               }
             }
-            else if(key==KEY_LEFT)			//KEY_F1按键按下
+            else if(key==KEY_LEFT)			
             {
               
               delay_ms(50);
@@ -370,7 +439,7 @@ void menu_pocess(void)
                 
                 TXM_StringDisplay(0,20,250,24,1,RED ,BLUE, (void*)Status_Item_Descrip[1][LANGUAGE]);
                 delay_ms(5); 
-//                TXM_StringDisplay(0,30,100,24,1,YELLOW ,RED, " F1:连接电脑     ");
+                menu_init(2);
                 
                 printf("\r\n初始化FATFS!!\r\n");
                 Fatfs_init();
@@ -382,7 +451,7 @@ void menu_pocess(void)
                 
               }
             } 
-            else if(key==KEY_UP)			//KEY_F2按键按下
+            else if(key==KEY_UP)			
             {
               
               delay_ms(50);
@@ -390,21 +459,18 @@ void menu_pocess(void)
                 
                 TXM_StringDisplay(0,20,250,24,1,RED ,BLUE, (void*)Status_Item_Descrip[2][LANGUAGE]);
                 delay_ms(5); 
-//                TXM_StringDisplay(0,30,150,24,1,YELLOW ,RED, " F2:更新APP      ");
+                menu_init(4);
                 
                 printf("初始化FATFS!!\r\n");
                 Fatfs_init();
                 
-                if(1)//!isFileExist())//判断是否与固件
+                if(!isFileExist())//判断固件是否存在
                 {
                   
                   printf("开始更新固件...\r\n");	
                   
-                  if(!isFileExist())//((*(vu32*)(0X20001000+4))&0xFF000000)==0x08000000)//判断是否为0X08XXXXXX.
-                  {	 
-                    //iap_write_appbin(FLASH_APP1_ADDR,USART_RX_BUF,10);//更新FLASH代码   
-                    
-                    
+                  if(!UpdateApp())//从spi flash复制APP到stmflash中
+                  {	                                       
                     TXM_StringDisplay(0,20,250,24,1,RED ,BLUE, (void*)Status_Item_Descrip[3][LANGUAGE]);
                     printf("固件更新完成!\r\n");	
                   }
@@ -423,21 +489,22 @@ void menu_pocess(void)
                 
               }
             }
-            else if(key==KEY_SET)			//KEY_POWER按键按下
+            else if(key==KEY_SET)			
             {
               delay_ms(50);
               if(key==KEY_SET){
                 
                 TXM_StringDisplay(0,20,250,24,1,RED ,BLUE, (void*)Status_Item_Descrip[6][LANGUAGE]);
                 delay_ms(5);                
-//                TXM_StringDisplay(0,30,50,24,1,YELLOW ,RED,  " POWER:进入APP   ");
+                menu_init(5);
                 delay_ms(1000);
                 
                 printf("开始执行FLASH用户代码!!\r\n");
                 if(((*(vu32*)(FLASH_APP1_ADDR+4))&0xFF000000)==0x08000000)//判断是否为0X08XXXXXX.
                 {	 
                   iap_load_app(FLASH_APP1_ADDR);//执行FLASH APP代码
-                }else 
+                }
+                else 
                 {
                   printf("非FLASH应用程序,无法执行!\r\n");
                   TXM_StringDisplay(0,20,250,24,1,RED ,BLUE, (void*)Status_Item_Descrip[7][LANGUAGE]);

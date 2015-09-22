@@ -11,4 +11,5 @@
 
 void Fatfs_init(void);
 u8 isFileExist(void);
+u8 UpdateApp(void);
 #endif

@@ -52,6 +52,33 @@ void Fatfs_init(void)
 u8 isFileExist(void)
 {
   FIL* fp;
+  FRESULT res = FR_NO_FILE;
+  
+  fp = (FIL*)mymalloc(sizeof(FIL));	//∑÷≈‰ƒ⁄¥Ê
+
+  
+  if(fp != NULL){
+    
+      res = f_open(fp,"0:DU.bin",FA_READ);
+  
+      printf("\r\n open res = %d \r\n",res);
+      
+      if(res==FR_OK)
+      {
+	 f_close(fp);						
+      }
+      myfree(fp);      
+  }  
+  	
+  
+  
+  return res;
+  
+}
+
+u8 UpdateApp(void)
+{
+  FIL* fp;
   FRESULT res;
   u8 *tempbuf;
   u16 bread;
@@ -81,6 +108,5 @@ u8 isFileExist(void)
   f_close(fp);	
   myfree(fp);
   
-  return res;
-  
+  return res;  
 }

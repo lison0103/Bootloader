@@ -457,35 +457,48 @@ void menu_pocess(void)
               delay_ms(50);
               if(key==KEY_UP){
                 
-                TXM_StringDisplay(0,20,250,24,1,RED ,BLUE, (void*)Status_Item_Descrip[2][LANGUAGE]);
-                delay_ms(5); 
-                menu_init(4);
-                
-                printf("初始化FATFS!!\r\n");
-                Fatfs_init();
-                
-                if(!isFileExist())//判断固件是否存在
-                {
+                  TXM_StringDisplay(0,20,250,24,1,RED ,BLUE, (void*)Status_Item_Descrip[2][LANGUAGE]);
+                  delay_ms(5); 
+                  menu_init(4);
                   
-                  printf("开始更新固件...\r\n");	
+                  printf("初始化FATFS!!\r\n");
                   
-                  if(!UpdateApp())//从spi flash复制APP到stmflash中
-                  {	                                       
-                    TXM_StringDisplay(0,20,250,24,1,RED ,BLUE, (void*)Status_Item_Descrip[3][LANGUAGE]);
-                    printf("固件更新完成!\r\n");	
+                  #if defined(USE_MYMALLOC)	       
+                      Data_Buffer=mymalloc(BULK_MAX_PACKET_SIZE*2*4);	//不申请内存会读失败？？？
+                      Bulk_Data_Buff=mymalloc(BULK_MAX_PACKET_SIZE);	            
+                  #endif
+                  
+                  Fatfs_init();
+                  
+                  
+                  if(!isFileExist())//判断固件是否存在
+                  {
+                    
+                      printf("开始更新固件...\r\n");	
+                      
+                      
+                      if(!UpdateApp())//从spi flash复制APP到stmflash中
+                      {	                                       
+                          TXM_StringDisplay(0,20,250,24,1,RED ,BLUE, (void*)Status_Item_Descrip[3][LANGUAGE]);
+                          printf("固件更新完成!\r\n");	
+                      }
+                      else 
+                      {
+                          TXM_StringDisplay(0,20,250,24,1,RED ,BLUE, (void*)Status_Item_Descrip[4][LANGUAGE]);
+                          printf("非FLASH应用程序!\r\n");
+                      }
                   }
                   else 
                   {
-                    TXM_StringDisplay(0,20,250,24,1,RED ,BLUE, (void*)Status_Item_Descrip[4][LANGUAGE]);
-                    printf("非FLASH应用程序!\r\n");
+                    TXM_StringDisplay(0,20,250,24,1,RED ,BLUE, (void*)Status_Item_Descrip[5][LANGUAGE]);
+                    printf("没有可以更新的固件!\r\n");
+                    
                   }
-                }
-                else 
-                {
-                  TXM_StringDisplay(0,20,250,24,1,RED ,BLUE, (void*)Status_Item_Descrip[5][LANGUAGE]);
-                  printf("没有可以更新的固件!\r\n");
                   
-                }
+                  #if defined(USE_MYMALLOC)
+                      myfree(Data_Buffer);
+                      myfree(Bulk_Data_Buff);
+                  #endif
                 
               }
             }

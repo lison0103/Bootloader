@@ -270,6 +270,11 @@ void UsbMassStor_init(void)
 		}
 	}
         usb_port_set(0);
+        
+     #if defined(USE_MYMALLOC)
+        myfree(Data_Buffer);
+        myfree(Bulk_Data_Buff);
+     #endif
 
 }
 

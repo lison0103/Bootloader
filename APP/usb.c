@@ -187,7 +187,7 @@ void UsbMassStor_init(void)
    	usb_port_set(1);	//USB再次连接	
         
 															  
- 	 Mass_Memory_Size[0]=4916*1024;//前4.8M字节
+ 	 Mass_Memory_Size[0]=4*1024*1024;//后4.8M字节
 	 Mass_Block_Size[0] =512;//因为我们在Init里面设置了SD卡的操作字节为512个,所以这里一定是512个字节.
 	 Mass_Block_Count[0]=Mass_Memory_Size[0]/Mass_Block_Size[0];
 	 

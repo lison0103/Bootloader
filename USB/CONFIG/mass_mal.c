@@ -41,7 +41,7 @@ u32 Mass_Block_Size[MAX_LUN+1];
 u32 Mass_Block_Count[MAX_LUN+1];
 
 
-#define OFFSETADDR 	(3*1024 + 0)*1024				//从3M+0K地址开始的
+#define OFFSETADDR 	(4*1024 + 0)*1024				//从4M+0K地址开始的
 	 
 /* Private function prototypes -----------------------------------------------*/
 /* Private functions ---------------------------------------------------------*/

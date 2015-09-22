@@ -27,7 +27,9 @@ int main(void)
 	delay_init();	    	 //延时函数初始化	  
 	uart_init(9600);	 	//串口初始化为9600
  	exfuns_init();		//为fatfs相关变量申请内存				 
-							    	
+	
+        hardware_init();        //硬件版本确认初始化        
+        
  	mem_init();			//初始化内存池	               
         key_init();   
         SPI_Flash_Init();

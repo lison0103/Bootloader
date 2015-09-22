@@ -28,6 +28,32 @@ Lock_Code=(CpuID[0]>>1)+(CpuID[1]>>2)+(CpuID[2]>>3);
 return Lock_Code;
 }
 
+void hardware_init(void)
+{
+  GPIO_InitTypeDef GPIO_InitStruct;  
+  RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOB, ENABLE);
+  
+  //上拉
+  GPIO_InitStruct.GPIO_Pin = GPIO_Pin_6;
+  GPIO_InitStruct.GPIO_Mode = GPIO_Mode_IPU; // 
+  GPIO_InitStruct.GPIO_Speed = GPIO_Speed_50MHz;
+  GPIO_Init(GPIOB , &GPIO_InitStruct);
+}
+
+
+u8 GetHardwareVerison(void)
+{
+    if(HARDWARE_VERSION == 0)
+    {
+        return HARDWARE_V2;
+    }
+    else
+    {
+        return HARDWARE_V1;
+    }
+
+}
+
 
 //THUMB指令不支持汇编内联
 //采用如下方法实现执行汇编指令WFI  

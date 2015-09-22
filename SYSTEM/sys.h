@@ -2,17 +2,7 @@
 #define __SYS_H	
 #include "stm32f10x.h"
 #include "usart.h"
-//////////////////////////////////////////////////////////////////////////////////	 
-//本程序只供学习使用，未经作者许可，不得用于其它任何用途
-//ALIENTEK STM32开发板		   
-//正点原子@ALIENTEK
-//技术论坛:www.openedv.com
-//修改日期:2012/8/18
-//版本：V1.7
-//版权所有，盗版必究。
-//Copyright(C) 广州市星翼电子科技有限公司 2009-2019
-//All rights reserved
-////////////////////////////////////////////////////////////////////////////////// 	 
+	 
 
 //0,不支持ucos
 //1,支持ucos
@@ -69,6 +59,15 @@
 
 void NVIC_Configuration(void);
 u32 GetLockCode(void);
+
+//读取硬件版本
+void hardware_init(void);
+u8 GetHardwareVerison(void);
+
+#define HARDWARE_VERSION  GPIO_ReadInputDataBit(GPIOB,GPIO_Pin_6)
+#define HARDWARE_V1	1		 
+#define HARDWARE_V2	2		
+ 
 
 //以下为汇编函数
 void WFI_SET(void);		//执行WFI指令

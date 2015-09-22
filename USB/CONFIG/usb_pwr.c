@@ -31,6 +31,7 @@
 #include "usb_conf.h"
 #include "usb_pwr.h"
 #include "hw_config.h"
+#include "sys.h"
 
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
@@ -67,8 +68,14 @@ RESULT PowerOn(void)
 
   /*** cable plugged-in ? ***/
   //USB_Cable_Config(ENABLE);
-  GPIO_ResetBits(GPIOC,GPIO_Pin_8);
-
+  if(HARDWARE_V2 == GetHardwareVerison())
+  {
+    GPIO_ResetBits(GPIOC,GPIO_Pin_12);
+  }
+  else if(HARDWARE_V1 == GetHardwareVerison())
+  {
+    GPIO_ResetBits(GPIOC,GPIO_Pin_8);
+  }
   /*** CNTR_PWDN = 0 ***/
   wRegVal = CNTR_FRES;
   _SetCNTR(wRegVal);

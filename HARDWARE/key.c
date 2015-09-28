@@ -63,7 +63,7 @@ u16 key_scan(void)
   		  
 	if(KEY_SW2==0||KEY_SW3==0||KEY_SW4==0||KEY_SW5==0||KEY_SW6==0||KEY_SW7==0||KEY_SW8==0||KEY_SW9==0||KEY_SW10==0)
 	{
-		delay_ms(10);//去抖动 
+		delay_ms(5);//去抖动 
 
 		if(KEY_SW2==0)return KEY_F1;
 		else if(KEY_SW3==0)return KEY_F2;

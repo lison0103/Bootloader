@@ -5,66 +5,66 @@
 
 /*******************************************************************************
 *******************************************************************************/
-void time_display_oneline(u16 dw,u16 x,u16 y, u8 *tb, u8 set_bit)
-{
-  u8 dis_data[20],a[20];
-  u16 i;
-  
-  dis_data[0] = '2';
-	dis_data[1] = '0';
-	dis_data[2] = (tb[0]/10)+0x30;
-	dis_data[3] = (tb[0]%10)+0x30;
-	dis_data[4] = '-';
-	dis_data[5] = (tb[1]/10)+0x30;
-	dis_data[6] = (tb[1]%10)+0x30;
-	dis_data[7] = '-';
-	dis_data[8] = (tb[2]/10)+0x30;
-	dis_data[9] = (tb[2]%10)+0x30;
-	dis_data[10] = ' ';
-	dis_data[11] = (tb[3]/10)+0x30;
-	dis_data[12] = (tb[3]%10)+0x30;
-	dis_data[13] = ':';
-	dis_data[14] = (tb[4]/10)+0x30;
-	dis_data[15] = (tb[4]%10)+0x30;
-	dis_data[16] = ':';
-	dis_data[17] = (tb[5]/10)+0x30;														
-	dis_data[18] = (tb[5]%10)+0x30;																						
-  dis_data[19] = 0;
-  
-  if(set_bit)
-  {
-    set_bit = 2+((set_bit-1)*3);
-    
-    for(i=0;i<set_bit;i++)
-    {
-      a[i] = dis_data[i];
-    }  
-    a[set_bit] = 0;
-    TXM_StringDisplay(0,x,y,24,1,BLACK,LGRAY, (void*)a);  
-    
-    a[0] = dis_data[set_bit];
-    a[1] = dis_data[set_bit+1];
-    a[2] = 0;
-    TXM_StringDisplay(0,x+(set_bit*12),y,24,1,YELLOW,RED, (void*)a);  
-    
-    for(i=0;i<18-set_bit-1;i++)
-    {
-      a[i] = dis_data[i+set_bit+2];
-    }  
-    a[i] = 0;
-    TXM_StringDisplay(0,x+24+(set_bit*12),y,24,1,BLACK,LGRAY, (void*)a);  
-    
-    
-    //TXM_StringDisplay(dw,x,y,24,1,BLUE ,LGRAY, (void*)dis_data);
-    
-    //TXM_StringDisplay(0,16+(set_bit*16),150,32,1,YELLOW,RED, (void*)a);  
-    //TXM_StringDisplay(dw,x,y,24,1,BLUE ,LGRAY, (void*)dis_data);
-  }
-  else
-  {  
-    TXM_StringDisplay(dw,x,y,24,1,WHITE ,DGRAY, (void*)dis_data);
-  }
-}
+//void time_display_oneline(u16 dw,u16 x,u16 y, u8 *tb, u8 set_bit)
+//{
+//  u8 dis_data[20],a[20];
+//  u16 i;
+//  
+//  dis_data[0] = '2';
+//	dis_data[1] = '0';
+//	dis_data[2] = (tb[0]/10)+0x30;
+//	dis_data[3] = (tb[0]%10)+0x30;
+//	dis_data[4] = '-';
+//	dis_data[5] = (tb[1]/10)+0x30;
+//	dis_data[6] = (tb[1]%10)+0x30;
+//	dis_data[7] = '-';
+//	dis_data[8] = (tb[2]/10)+0x30;
+//	dis_data[9] = (tb[2]%10)+0x30;
+//	dis_data[10] = ' ';
+//	dis_data[11] = (tb[3]/10)+0x30;
+//	dis_data[12] = (tb[3]%10)+0x30;
+//	dis_data[13] = ':';
+//	dis_data[14] = (tb[4]/10)+0x30;
+//	dis_data[15] = (tb[4]%10)+0x30;
+//	dis_data[16] = ':';
+//	dis_data[17] = (tb[5]/10)+0x30;														
+//	dis_data[18] = (tb[5]%10)+0x30;																						
+//  dis_data[19] = 0;
+//  
+//  if(set_bit)
+//  {
+//    set_bit = 2+((set_bit-1)*3);
+//    
+//    for(i=0;i<set_bit;i++)
+//    {
+//      a[i] = dis_data[i];
+//    }  
+//    a[set_bit] = 0;
+//    TXM_StringDisplay(0,x,y,24,1,BLACK,LGRAY, (void*)a);  
+//    
+//    a[0] = dis_data[set_bit];
+//    a[1] = dis_data[set_bit+1];
+//    a[2] = 0;
+//    TXM_StringDisplay(0,x+(set_bit*12),y,24,1,YELLOW,RED, (void*)a);  
+//    
+//    for(i=0;i<18-set_bit-1;i++)
+//    {
+//      a[i] = dis_data[i+set_bit+2];
+//    }  
+//    a[i] = 0;
+//    TXM_StringDisplay(0,x+24+(set_bit*12),y,24,1,BLACK,LGRAY, (void*)a);  
+//    
+//    
+//    //TXM_StringDisplay(dw,x,y,24,1,BLUE ,LGRAY, (void*)dis_data);
+//    
+//    //TXM_StringDisplay(0,16+(set_bit*16),150,32,1,YELLOW,RED, (void*)a);  
+//    //TXM_StringDisplay(dw,x,y,24,1,BLUE ,LGRAY, (void*)dis_data);
+//  }
+//  else
+//  {  
+//    TXM_StringDisplay(dw,x,y,24,1,WHITE ,DGRAY, (void*)dis_data);
+//  }
+//}
 
 u32 GetDate(u8 *tb)
 {

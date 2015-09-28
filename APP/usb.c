@@ -206,7 +206,7 @@ void UsbMassStor_init(void)
                 if(key==KEY_RIGHT)			
                 {
                                
-                  delay_ms(50);
+                  delay_ms(1);
                   if(key==KEY_RIGHT)
                   {                                         
                       menu_init(3);

@@ -125,7 +125,7 @@
         </option>
         <option>
           <name>OCImagesPath1</name>
-          <state>C:\Users\lisonchen\Desktop\DU.bin</state>
+          <state>C:\Users\lisonchen\1project\b_DU IAR\Projects\Debug\Exe\DU.hex</state>
         </option>
         <option>
           <name>OCImagesSuppressCheck2</name>
@@ -161,7 +161,7 @@
         </option>
         <option>
           <name>OCImagesUse1</name>
-          <state>0</state>
+          <state>1</state>
         </option>
         <option>
           <name>OCImagesUse2</name>

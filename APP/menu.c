@@ -426,7 +426,7 @@ void menu_pocess(void)
             key=key_scan();
             if(key == KEY_F3)
             {
-              delay_ms(50);
+              delay_ms(1);
               if(key == KEY_F3)
               {
                   LANGUAGE = (~LANGUAGE) & 0x01;
@@ -437,7 +437,7 @@ void menu_pocess(void)
             else if(key==KEY_LEFT)			
             {
               
-              delay_ms(50);
+              delay_ms(1);
               if(key==KEY_LEFT)
               {               
                   menu_init(2);
@@ -455,7 +455,7 @@ void menu_pocess(void)
             else if(key==KEY_UP)			
             {
               
-              delay_ms(50);
+              delay_ms(1);
               if(key==KEY_UP)
               {                
                   menu_init(4);
@@ -526,7 +526,7 @@ void menu_pocess(void)
             }
             else if(key==KEY_SET)			
             {
-              delay_ms(50);
+              delay_ms(1);
               if(key==KEY_SET)
               {                               
                   menu_init(5);
@@ -547,7 +547,7 @@ void menu_pocess(void)
             }
             
 
-//            delay_ms(10);
+            delay_ms(10);
 }
 
 

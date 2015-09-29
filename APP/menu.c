@@ -31,7 +31,7 @@ const u8 *Status_Item_Descrip[][2] =
 u8 *Version = {"V0.1"};
 
 
-u8 TimeBuff[6];
+//u8 TimeBuff[6];
 //u32 Current_Date;
 
 void RCC_init(void)
@@ -420,8 +420,8 @@ void menu_pocess(void)
 {
             u8 key = 0;
   
-            RTCC_GetTime(TimeBuff);
-            time_display(307, 308, TimeBuff);
+//            RTCC_GetTime(TimeBuff);
+//            time_display(307, 308, TimeBuff);
   
             key=key_scan();
             if(key == KEY_F3)
@@ -487,9 +487,11 @@ void menu_pocess(void)
                               TXM_StringDisplay(0,20,250,24,1,RED ,BLUE, (void*)Status_Item_Descrip[3][LANGUAGE]);//状态：APP更新完成
                               printf("固件更新完成!\r\n");	
 //                              break;
-                              delay_ms(1000);
+                              delay_ms(500);
                               if(((*(vu32*)(FLASH_APP1_ADDR+4))&0xFF000000)==0x08000000)//判断是否为0X08XXXXXX.
                               {	 
+                                  TIM_Cmd(TIM3, DISABLE);
+                                  delay_ms(500);
                                   iap_load_app(FLASH_APP1_ADDR);//执行FLASH APP代码
                               }
                               else 
@@ -530,11 +532,13 @@ void menu_pocess(void)
               if(key==KEY_SET)
               {                               
                   menu_init(5);
-                  delay_ms(1000);
+                  delay_ms(500);
                   
                   printf("开始执行FLASH用户代码!!\r\n");
                   if(((*(vu32*)(FLASH_APP1_ADDR+4))&0xFF000000)==0x08000000)//判断是否为0X08XXXXXX.
                   {	 
+                      TIM_Cmd(TIM3, DISABLE);
+                      delay_ms(500);
                       iap_load_app(FLASH_APP1_ADDR);//执行FLASH APP代码
                   }
                   else 

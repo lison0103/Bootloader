@@ -13,6 +13,7 @@
 #include "bsp_rtc_1302.h"
 #include "time_display.h"
 #include "lcd.h"
+#include "timer.h"
 
 #if 0
 

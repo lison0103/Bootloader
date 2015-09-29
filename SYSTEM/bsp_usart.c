@@ -196,22 +196,6 @@ void USART2_IRQHandler(void)
 #endif			
 }
 
-void NVIC_Configuration_Usart(void)
-{
-  NVIC_InitTypeDef NVIC_InitStructure;
-
-  /* Configure the NVIC Preemption Priority Bits */  
-  NVIC_PriorityGroupConfig(NVIC_PriorityGroup_0);
-
-#ifdef USART2_EN
-  /* Enable the USARTy Interrupt */
-  NVIC_InitStructure.NVIC_IRQChannel = USART2_IRQn;
-  NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0;
-  NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
-  NVIC_Init(&NVIC_InitStructure);
-#endif
-
-}
  
 /*************************************************************************************************** 
 ***************************************************************************************************/  
@@ -233,6 +217,21 @@ void USART2_Init(void)
   GPIO_InitStruct.GPIO_Mode = GPIO_Mode_IN_FLOATING; // 
   GPIO_InitStruct.GPIO_Speed = GPIO_Speed_50MHz;
   GPIO_Init(GPIOA , &GPIO_InitStruct);
+  
+  
+      NVIC_InitTypeDef NVIC_InitStructure;
+
+    /* Configure the NVIC Preemption Priority Bits */  
+  //  NVIC_PriorityGroupConfig(NVIC_PriorityGroup_0);
+
+  #ifdef USART2_EN
+    /* Enable the USARTy Interrupt */
+    NVIC_InitStructure.NVIC_IRQChannel = USART2_IRQn;
+    NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority=3;
+    NVIC_InitStructure.NVIC_IRQChannelSubPriority = 1;
+    NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
+    NVIC_Init(&NVIC_InitStructure);
+  #endif
 
 	BSP_USART_Init(USART2, 115200, USART_Parity_No);//, ENABLE
 	

@@ -5,7 +5,6 @@
 #include "stm32f10x.h" 
 
 void BSP_USART_Init(USART_TypeDef* USARTx, uint32_t baud, uint16_t Parity); //, FunctionalState DMAState
-void NVIC_Configuration_Usart(void);
 
 void USART2_Init(void);
 

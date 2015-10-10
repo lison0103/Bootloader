@@ -117,6 +117,7 @@ u8 UpdateApp(void)
   
   f_close(fp);	
   myfree(fp);
+  myfree(tempbuf);
   
   return res;  
 }

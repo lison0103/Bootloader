@@ -50,8 +50,11 @@ int main(void)
         mem_init();		//初始化内存池
         SPI_Flash_Init();       //外部flash初始化        
         RTCC_Init();            //RTC初始化，rt1302
- 	exfuns_init();		//为fatfs相关变量申请内存
         
+ 	if(exfuns_init())		//为fatfs相关变量申请内存
+        {
+            //申请内存失败
+        }
         menu_init(0);            //初始化菜单       
         
         //初始化一个定时器用作时间显示

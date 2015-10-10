@@ -462,10 +462,10 @@ void menu_pocess(void)
                   
                   printf("初始化FATFS!!\r\n");
                   
-                  #if defined(USE_MYMALLOC)	       
-                      Data_Buffer=mymalloc(BULK_MAX_PACKET_SIZE*2*4);	//不申请内存会读失败？？？
-                      Bulk_Data_Buff=mymalloc(BULK_MAX_PACKET_SIZE);	            
-                  #endif
+//                  #if defined(USE_MYMALLOC)	       
+//                      Data_Buffer=mymalloc(BULK_MAX_PACKET_SIZE*2*4);	//不申请内存会读失败？？？----------10.10 原因是初始化的时候没有给fatfs申请到内存，要先初始化内存池再申请内存
+//                      Bulk_Data_Buff=mymalloc(BULK_MAX_PACKET_SIZE);	            
+//                  #endif
                   
                   u8 count = 3;
                   u8 res = 0;
@@ -519,10 +519,10 @@ void menu_pocess(void)
                       }
                       count--;
                   }
-                  #if defined(USE_MYMALLOC)
-                      myfree(Data_Buffer);
-                      myfree(Bulk_Data_Buff);
-                  #endif
+//                  #if defined(USE_MYMALLOC)
+//                      myfree(Data_Buffer);
+//                      myfree(Bulk_Data_Buff);
+//                  #endif
                 
               }
             }

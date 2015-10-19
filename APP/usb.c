@@ -4,7 +4,7 @@
 extern u8 LANGUAGE;
 extern const u8 *Status_Item_Descrip[][2];
 extern const u8 *Menu_Item_Descrip[][2];
-extern void menu_init(u8 item);
+//extern void menu_init(void);
 
 void usb_port_set(u8 enable)
 {
@@ -161,12 +161,12 @@ void UsbMassStor_init(void)
 void UsbMassStor_init(void)
 {
 
-        u8 offline_cnt=0;
-	u8 tct=0;
-	u8 USB_STA = USB_STATUS_REG;
-	u8 Divece_STA;
-        
-        u8 key;
+//        u8 offline_cnt=0;
+//	u8 tct=0;
+//	u8 USB_STA = USB_STATUS_REG;
+//	u8 Divece_STA;
+//        
+//        u8 key;
 
         printf("\r\n USB MASS STORAGE init! \r\n");
         
@@ -199,79 +199,79 @@ void UsbMassStor_init(void)
  	USB_Init();
         
         
-	while(1)
-	{	
-                delay_ms(1);	
-                key=key_scan();
-                if(key==KEY_RIGHT)			
-                {
-                               
-                  delay_ms(1);
-                  if(key==KEY_RIGHT)
-                  {                                         
-                      menu_init(3);
-                      printf("\r\n exit usb mass \r\n");
-                      break;
-                  }
-                }
-                
-		if(USB_STA!=USB_STATUS_REG)//状态改变了 
-		{	 						   
-			//清除显示			  	   
-			if(USB_STATUS_REG&0x01)//正在写		  
-			{
-				//提示USB正在写入数据	
-//                          TXM_StringDisplay(0,20,250,24,1,RED ,BLUE, "状态：正在写入数据");
-			}
-			if(USB_STATUS_REG&0x02)//正在读
-			{
-				//提示USB正在读出数据 
-//                          TXM_StringDisplay(0,20,250,24,1,RED ,BLUE, "状态：正在读出数据");
-			}	 										  
-			if(USB_STATUS_REG&0x04){}//提示写入错误
-			else {}//清除显示	  
-			if(USB_STATUS_REG&0x08){}//提示读出错误
-			else {}//清除显示    
-			USB_STA=USB_STATUS_REG;//记录最后的状态
-		}
-		if(Divece_STA!=bDeviceState) 
-		{
-			if(bDeviceState==CONFIGURED)
-                        {
-                          //提示USB连接已经建立
-                          
-                          TXM_StringDisplay(0,20,250,24,1,RED ,BLUE, (void*)Status_Item_Descrip[9][LANGUAGE]);  
-                        }
-			else 
-                        {
-                          //提示USB被拔出了
-                          TXM_StringDisplay(0,20,250,24,1,RED ,BLUE, (void*)Status_Item_Descrip[10][LANGUAGE]); 
-                        }
-			Divece_STA=bDeviceState;
-		}
-		tct++;
-		if(tct==200)
-		{
-			tct=0;
-			if(USB_STATUS_REG&0x10)
-			{
-				offline_cnt=0;//USB连接了,则清除offline计数器
-				bDeviceState=CONFIGURED;
-			}
-                        else//没有得到轮询 
-			{
-				offline_cnt++;  
-				if(offline_cnt>10)bDeviceState=UNCONNECTED;//2s内没收到在线标记,代表USB被拔出了
-			}
-			USB_STATUS_REG=0;
-		}
-	}
-        usb_port_set(0);
-        
-     #if defined(USE_MYMALLOC)
-        myfree(Data_Buffer);
-        myfree(Bulk_Data_Buff);
-     #endif
+//	while(1)
+//	{	
+//                delay_ms(1);	
+//                key=key_scan();
+//                if(key==KEY_RIGHT)			
+//                {
+//                               
+//                  delay_ms(1);
+//                  if(key==KEY_RIGHT)
+//                  {                                         
+//                      menu_init(3);
+//                      printf("\r\n exit usb mass \r\n");
+//                      break;
+//                  }
+//                }
+//                
+//		if(USB_STA!=USB_STATUS_REG)//状态改变了 
+//		{	 						   
+//			//清除显示			  	   
+//			if(USB_STATUS_REG&0x01)//正在写		  
+//			{
+//				//提示USB正在写入数据	
+////                          TXM_StringDisplay(0,20,250,24,1,RED ,BLUE, "状态：正在写入数据");
+//			}
+//			if(USB_STATUS_REG&0x02)//正在读
+//			{
+//				//提示USB正在读出数据 
+////                          TXM_StringDisplay(0,20,250,24,1,RED ,BLUE, "状态：正在读出数据");
+//			}	 										  
+//			if(USB_STATUS_REG&0x04){}//提示写入错误
+//			else {}//清除显示	  
+//			if(USB_STATUS_REG&0x08){}//提示读出错误
+//			else {}//清除显示    
+//			USB_STA=USB_STATUS_REG;//记录最后的状态
+//		}
+//		if(Divece_STA!=bDeviceState) 
+//		{
+//			if(bDeviceState==CONFIGURED)
+//                        {
+//                          //提示USB连接已经建立
+//                          
+//                          TXM_StringDisplay(0,20,250,24,1,RED ,BLUE, (void*)Status_Item_Descrip[9][LANGUAGE]);  
+//                        }
+//			else 
+//                        {
+//                          //提示USB被拔出了
+//                          TXM_StringDisplay(0,20,250,24,1,RED ,BLUE, (void*)Status_Item_Descrip[10][LANGUAGE]); 
+//                        }
+//			Divece_STA=bDeviceState;
+//		}
+//		tct++;
+//		if(tct==200)
+//		{
+//			tct=0;
+//			if(USB_STATUS_REG&0x10)
+//			{
+//				offline_cnt=0;//USB连接了,则清除offline计数器
+//				bDeviceState=CONFIGURED;
+//			}
+//                        else//没有得到轮询 
+//			{
+//				offline_cnt++;  
+//				if(offline_cnt>10)bDeviceState=UNCONNECTED;//2s内没收到在线标记,代表USB被拔出了
+//			}
+//			USB_STATUS_REG=0;
+//		}
+//	}
+//        usb_port_set(0);
+//        
+//     #if defined(USE_MYMALLOC)
+//        myfree(Data_Buffer);
+//        myfree(Bulk_Data_Buff);
+//     #endif
 
 }
 

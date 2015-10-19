@@ -270,12 +270,13 @@ void menu_pocess(void)
 #else
 
 u8 LANGUAGE = 0;
+u8 menu_item = 0;
 
 //菜单初始化
-void menu_init(u8 item)
+void menu_init(void)
 {
   
-  if(0 == item)//菜单初始化
+  if(0 == menu_item)//菜单初始化
   {
       ZTM_FullScreenImageDisp(300);
       delay_ms(5);
@@ -295,9 +296,11 @@ void menu_init(u8 item)
       
       TXM_StringDisplay(0,20,250,24,1,RED ,BLUE,    (void*)Status_Item_Descrip[0][LANGUAGE]);
       delay_ms(5);      
+      
+      menu_item = 1;
   
   }
-  else if(1 == item)//语言切换
+  else if(1 == menu_item)//语言切换
   {
       ZTM_RectangleFill (0, 280,239, 319,DGRAY); 
       delay_ms(5);
@@ -313,7 +316,7 @@ void menu_init(u8 item)
       delay_ms(5);      
   
   }
-  else if(2 == item)//选择连接电脑
+  else if(2 == menu_item)//选择连接电脑
   {
       for(u8 i = 0;i < 4;i++)
       {
@@ -325,7 +328,7 @@ void menu_init(u8 item)
       TXM_StringDisplay(0,20,250,24,1,RED ,BLUE, (void*)Status_Item_Descrip[1][LANGUAGE]);
       delay_ms(5);       
   }  
-  else if(3 == item)//选择断开电脑
+  else if(3 == menu_item)//选择断开电脑
   {
 
       for(u8 i = 0;i < 4;i++)
@@ -338,7 +341,7 @@ void menu_init(u8 item)
       TXM_StringDisplay(0,20,250,24,1,RED ,BLUE, (void*)Status_Item_Descrip[8][LANGUAGE]);
       delay_ms(5);  
   } 
-  else if(4 == item)//选择更新APP
+  else if(4 == menu_item)//选择更新APP
   {
 
       for(u8 i = 0;i < 4;i++)
@@ -352,7 +355,7 @@ void menu_init(u8 item)
       delay_ms(5); 
   
   } 
-  else if(5 == item)//选择进入APP
+  else if(5 == menu_item)//选择进入APP
   {
 
       for(u8 i = 0;i < 4;i++)
@@ -414,7 +417,9 @@ void enter_menu(void)
           }          
 }
 
-
+u8 lcd_sleep = 0;
+u8 usb_connect = 0;
+extern u8 sleepcount;
 
 void menu_pocess(void)
 {
@@ -424,133 +429,197 @@ void menu_pocess(void)
 //            time_display(307, 308, TimeBuff);
   
             key=key_scan();
-            if(key == KEY_F3)
+            if(key)
             {
-              delay_ms(1);
-              if(key == KEY_F3)
-              {
-                  LANGUAGE = (~LANGUAGE) & 0x01;
-                  menu_init(1);
-                  delay_ms(500);
-              }
-            }
-            else if(key==KEY_LEFT)			
-            {
-              
-              delay_ms(1);
-              if(key==KEY_LEFT)
-              {               
-                  menu_init(2);
-                  
-                  printf("\r\n初始化FATFS!!\r\n");
-                  Fatfs_init();
-                  
-                  printf("\r\n初始化USB!!\r\n");
-                  UsbMassStor_init();
+                sleepcount = 0;
+                if(lcd_sleep)
+                {
+                    lcd_sleep = 0;                    
+                    LCM_Light_Setting(50);
+                    delay_ms(500);
+                }
                 
-//                f_mount(NULL,"0:",1); //卸载
-                
-              }
-            } 
-            else if(key==KEY_UP)			
-            {
-              
-              delay_ms(1);
-              if(key==KEY_UP)
-              {                
-                  menu_init(4);
-                  
-                  printf("初始化FATFS!!\r\n");
-                  
-//                  #if defined(USE_MYMALLOC)	       
-//                      Data_Buffer=mymalloc(BULK_MAX_PACKET_SIZE*2*4);	//不申请内存会读失败？？？----------10.10 原因是初始化的时候没有给fatfs申请到内存，要先初始化内存池再申请内存
-//                      Bulk_Data_Buff=mymalloc(BULK_MAX_PACKET_SIZE);	            
-//                  #endif
-                  
-                  u8 count = 3;
-                  u8 res = 0;
-                      
-                  while(count)//失败重试三次
+//                if(key == KEY_POWER)
+//                {
+//                  delay_ms(1);
+//                  if(key == KEY_POWER)
+//                  {
+//                      if(lcd_sleep)
+//                      {
+//                        lcd_sleep = 0;                   
+//                        LCM_Light_Setting(50);  
+//                        delay_ms(500);
+//                      }
+//                      else
+//                      {
+//                        lcd_sleep = 1;                    
+//                        LCM_Light_Setting(0);   
+//                        delay_ms(500);
+//                      }
+//                  }
+//                }
+                else if(key == KEY_F3)
+                {
+                  delay_ms(1);
+                  if(key == KEY_F3)
                   {
+                      LANGUAGE = (~LANGUAGE) & 0x01;
+                      menu_init();
+                      delay_ms(500);
+                  }
+                }
+                else if(key==KEY_LEFT)			
+                {
+                  
+                  delay_ms(1);
+                  if(key==KEY_LEFT)
+                  {               
+                    if(usb_connect == 0)
+                    {
+                      usb_connect = 1;
+                      menu_item = 2;
+                      menu_init();
                       
+                      printf("\r\n初始化FATFS!!\r\n");
                       Fatfs_init();
                       
+                      printf("\r\n初始化USB!!\r\n");
+                      UsbMassStor_init();
+                    
+    //                f_mount(NULL,"0:",1); //卸载
+                    }
+                    
+                  }
+                }
+                if(key==KEY_RIGHT)			
+                {
+                  
+                  delay_ms(1);
+                  if(key==KEY_RIGHT)
+                  {    
+                    if(usb_connect)
+                    {
+                      usb_connect = 0;
+                      menu_item = 3;
+                      menu_init();
+                      printf("\r\n exit usb mass \r\n");
                       
-                      if(!isFileExist())//判断固件是否存在
+                      usb_port_set(0);       
+                       #if defined(USE_MYMALLOC)
+                          myfree(Data_Buffer);
+                          myfree(Bulk_Data_Buff);
+                       #endif
+                       delay_ms(500);   
+                    }
+                    
+                  }
+                }
+                else if(key==KEY_UP)			
+                {
+                  
+                  delay_ms(1);
+                  if(key==KEY_UP)
+                  {
+                      if(usb_connect == 0)
                       {
-                        
-                          printf("开始更新固件...\r\n");	
+                          menu_item = 4;
+                          menu_init();
                           
-                          res = UpdateApp();
-                          if(!res)//从spi flash复制APP到stmflash中
-                          {	                                       
-                              TXM_StringDisplay(0,20,250,24,1,RED ,BLUE, (void*)Status_Item_Descrip[3][LANGUAGE]);//状态：APP更新完成
-                              printf("固件更新完成!\r\n");	
-//                              break;
-                              delay_ms(500);
-                              if(((*(vu32*)(FLASH_APP1_ADDR+4))&0xFF000000)==0x08000000)//判断是否为0X08XXXXXX.
-                              {	 
-                                  TIM_Cmd(TIM3, DISABLE);
-                                  delay_ms(500);
-                                  iap_load_app(FLASH_APP1_ADDR);//执行FLASH APP代码
+                          printf("初始化FATFS!!\r\n");
+                          
+        //                  #if defined(USE_MYMALLOC)	       
+        //                      Data_Buffer=mymalloc(BULK_MAX_PACKET_SIZE*2*4);	//不申请内存会读失败？？？----------10.10 原因是初始化的时候没有给fatfs申请到内存，要先初始化内存池再申请内存
+        //                      Bulk_Data_Buff=mymalloc(BULK_MAX_PACKET_SIZE);	            
+        //                  #endif
+                          
+                          u8 count = 3;
+                          u8 res = 0;
+                              
+                          while(count)//失败重试三次
+                          {
+                              
+                              Fatfs_init();
+                              
+                              
+                              if(!isFileExist())//判断固件是否存在
+                              {
+                                
+                                  printf("开始更新固件...\r\n");	
+                                  
+                                  res = UpdateApp();
+                                  if(!res)//从spi flash复制APP到stmflash中
+                                  {	                                       
+                                      TXM_StringDisplay(0,20,250,24,1,RED ,BLUE, (void*)Status_Item_Descrip[3][LANGUAGE]);//状态：APP更新完成
+                                      printf("固件更新完成!\r\n");	
+        //                              break;
+                                      delay_ms(500);
+                                      if(((*(vu32*)(FLASH_APP1_ADDR+4))&0xFF000000)==0x08000000)//判断是否为0X08XXXXXX.
+                                      {	 
+                                          TIM_Cmd(TIM3, DISABLE);
+                                          delay_ms(500);
+                                          iap_load_app(FLASH_APP1_ADDR);//执行FLASH APP代码
+                                      }
+                                      else 
+                                      {
+                                          printf("非FLASH应用程序,无法执行!\r\n");
+                                          TXM_StringDisplay(0,20,250,24,1,RED ,BLUE, (void*)Status_Item_Descrip[7][LANGUAGE]);//状态：无APP程序                   
+                                      }
+                                  }
+                                  else if(FR_INVALID_OBJECT == res)
+                                  {
+                                      TXM_StringDisplay(0,20,250,24,1,RED ,BLUE, (void*)Status_Item_Descrip[11][LANGUAGE]);//状态：非合法程序  
+                                  
+                                  }
+                                  else 
+                                  {
+                                      TXM_StringDisplay(0,20,250,24,1,RED ,BLUE, (void*)Status_Item_Descrip[4][LANGUAGE]);//状态：更新失败
+                                      printf("非FLASH应用程序!\r\n");
+                                  }
                               }
                               else 
                               {
-                                  printf("非FLASH应用程序,无法执行!\r\n");
-                                  TXM_StringDisplay(0,20,250,24,1,RED ,BLUE, (void*)Status_Item_Descrip[7][LANGUAGE]);//状态：无APP程序                   
+                                  TXM_StringDisplay(0,20,250,24,1,RED ,BLUE, (void*)Status_Item_Descrip[5][LANGUAGE]);//状态：无可更新固件
+                                  printf("没有可以更新的固件!\r\n");
+                                  break;                        
                               }
+                              count--;
                           }
-                          else if(FR_INVALID_OBJECT == res)
-                          {
-                              TXM_StringDisplay(0,20,250,24,1,RED ,BLUE, (void*)Status_Item_Descrip[11][LANGUAGE]);//状态：非合法程序  
+        //                  #if defined(USE_MYMALLOC)
+        //                      myfree(Data_Buffer);
+        //                      myfree(Bulk_Data_Buff);
+        //                  #endif
+                      }
+                    
+                  }
+                }
+                else if(key==KEY_SET)			
+                {
+                  delay_ms(1);
+                  if(key==KEY_SET)
+                  {       
+                      if(usb_connect == 0)
+                      {
+                          menu_item = 5;
+                          menu_init();
+                          delay_ms(500);
                           
+                          printf("开始执行FLASH用户代码!!\r\n");
+                          if(((*(vu32*)(FLASH_APP1_ADDR+4))&0xFF000000)==0x08000000)//判断是否为0X08XXXXXX.
+                          {	 
+                              TIM_Cmd(TIM3, DISABLE);
+                              delay_ms(500);
+                              iap_load_app(FLASH_APP1_ADDR);//执行FLASH APP代码
                           }
                           else 
                           {
-                              TXM_StringDisplay(0,20,250,24,1,RED ,BLUE, (void*)Status_Item_Descrip[4][LANGUAGE]);//状态：更新失败
-                              printf("非FLASH应用程序!\r\n");
-                          }
+                              printf("非FLASH应用程序,无法执行!\r\n");
+                              TXM_StringDisplay(0,20,250,24,1,RED ,BLUE, (void*)Status_Item_Descrip[7][LANGUAGE]);//状态：无APP程序                   
+                          }	               
                       }
-                      else 
-                      {
-                          TXM_StringDisplay(0,20,250,24,1,RED ,BLUE, (void*)Status_Item_Descrip[5][LANGUAGE]);//状态：无可更新固件
-                          printf("没有可以更新的固件!\r\n");
-                          break;                        
-                      }
-                      count--;
                   }
-//                  #if defined(USE_MYMALLOC)
-//                      myfree(Data_Buffer);
-//                      myfree(Bulk_Data_Buff);
-//                  #endif
-                
-              }
-            }
-            else if(key==KEY_SET)			
-            {
-              delay_ms(1);
-              if(key==KEY_SET)
-              {                               
-                  menu_init(5);
-                  delay_ms(500);
-                  
-                  printf("开始执行FLASH用户代码!!\r\n");
-                  if(((*(vu32*)(FLASH_APP1_ADDR+4))&0xFF000000)==0x08000000)//判断是否为0X08XXXXXX.
-                  {	 
-                      TIM_Cmd(TIM3, DISABLE);
-                      delay_ms(500);
-                      iap_load_app(FLASH_APP1_ADDR);//执行FLASH APP代码
-                  }
-                  else 
-                  {
-                      printf("非FLASH应用程序,无法执行!\r\n");
-                      TXM_StringDisplay(0,20,250,24,1,RED ,BLUE, (void*)Status_Item_Descrip[7][LANGUAGE]);//状态：无APP程序                   
-                  }	               
-                
-              }
-            }
+                }
             
-
+            }
             delay_ms(10);
 }
 

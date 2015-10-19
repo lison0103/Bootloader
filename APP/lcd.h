@@ -9,6 +9,7 @@
 
 u8 LCM_HandOn_Check(void);
 void LCM_Init(void);
+void LCM_Light_Setting(u8 level);
 
 
 #endif

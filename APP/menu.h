@@ -24,9 +24,11 @@ void menu_pocess(void);
 
 #else
 void RCC_init(void);
-void menu_init(u8 item);
+void menu_init(void);
 void menu_pocess(void);
 void enter_menu(void);
+
+extern u8 menu_item;
 
 #endif
 

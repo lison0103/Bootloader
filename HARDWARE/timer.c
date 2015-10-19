@@ -1,9 +1,14 @@
 #include "time.h"
 #include "time_display.h"
 #include "bsp_rtc_1302.h"
+#include "wakeup.h"
+#include "lcd.h"
 
 
 u8 TimeBuff[6];
+
+u8 sleepcount = 0;
+extern u8 lcd_sleep;
 
 
 //通用定时器中断初始化
@@ -46,5 +51,20 @@ void TIM3_IRQHandler(void)   //TIM3中断
                     TIM_ClearITPendingBit(TIM3, TIM_IT_Update  );  //清除TIMx的中断待处理位:TIM 中断源 
                     RTCC_GetTime(TimeBuff);
                     time_display(307, 308, TimeBuff);
+                    if(lcd_sleep == 0)
+                    {                  
+                        sleepcount++;
+                        if(sleepcount > 1*120)  //1分钟无操作，调低屏幕亮度
+                        {
+                            sleepcount = 0;
+                            lcd_sleep = 1;
+                            LCM_Light_Setting(5);
+                            //Sys_Enter_Standby();
+                        }
+                    }
+                    else
+                    {
+                        sleepcount = 0;
+                    }
 		}
 }

@@ -54,14 +54,12 @@ void TIM3_IRQHandler(void)   //TIM3中断
                     if(lcd_sleep == 0)
                     {                  
                         sleepcount++;
-                        if(sleepcount > 1*20)  //1分钟无操作，调低屏幕亮度
+                        if(sleepcount > 1*120)  //1分钟无操作，调低屏幕亮度
                         {
                             sleepcount = 0;
                             lcd_sleep = 1;
                             LCM_Light_Setting(5);
                             //Sys_Enter_Standby();
-//                            Sys_Stop();
-//                            Sys_Exit_SleepMode();
                         }
                     }
                     else

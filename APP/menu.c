@@ -420,7 +420,6 @@ void enter_menu(void)
 u8 lcd_sleep = 0;
 u8 usb_connect = 0;
 extern u8 sleepcount;
-#include "wakeup.h"
 
 void menu_pocess(void)
 {
@@ -459,17 +458,6 @@ void menu_pocess(void)
 //                      }
 //                  }
 //                }
-                else if(key == KEY_F2)
-                {
-                  delay_ms(1);
-                  if(key == KEY_F2)
-                  {
-                      TIM_DeInit(TIM3);
-                      Sys_Enter_SleepMode();
-                      
-                      delay_ms(500);
-                  }
-                }
                 else if(key == KEY_F3)
                 {
                   delay_ms(1);

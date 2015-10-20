@@ -2004,9 +2004,6 @@
     <file>
       <name>$PROJ_DIR$\..\HARDWARE\timer.c</name>
     </file>
-    <file>
-      <name>$PROJ_DIR$\..\HARDWARE\wakeup.c</name>
-    </file>
   </group>
   <group>
     <name>IAP</name>

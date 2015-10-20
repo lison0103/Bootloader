@@ -6,8 +6,10 @@
 
 u8 TimeBuff[6];
 
-u8 sleepcount = 0;
+u32 sleepcount = 0;
 extern u8 lcd_sleep;
+extern u8 temperate_flag;
+u8 temperate_count = 0;
 
 
 //通用定时器中断初始化
@@ -64,5 +66,12 @@ void TIM3_IRQHandler(void)   //TIM3中断
                     {
                         sleepcount = 0;
                     }
+                    
+                    temperate_count++;
+                    if(temperate_count == 60)
+                    {
+                        temperate_count = 0;
+                        temperate_flag = 1;                        
+                    }                   
 		}
 }

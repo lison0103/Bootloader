@@ -16,6 +16,7 @@
 #include "usb.h"
 #include "fatfs.h"
 #include "lcd.h"
+#include "temperate_adc.h"
 
 int main(void)
 { 
@@ -35,9 +36,10 @@ int main(void)
         enter_menu();           //判断是否进入Loader，等待约1s，按键F1进入，否则进入APP
         mem_init();		//初始化内存池
         SPI_Flash_Init();       //外部flash初始化        
-        RTCC_Init();            //RTC初始化，rt1302
+        RTCC_Init();            //RTC初始化，rt1302       
+        T_Adc_Init();		//ADC初始化
         
- 	if(exfuns_init())		//为fatfs相关变量申请内存
+ 	if(exfuns_init())	//为fatfs相关变量申请内存
         {
             //申请内存失败
         }

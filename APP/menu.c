@@ -1,11 +1,12 @@
 #include "menu.h"
-
+#include "temperate_adc.h"
 
 u8 LANGUAGE = 0;
 u8 menu_item = 0;
 u8 lcd_sleep = 0;
 u8 usb_connect = 0;
-extern u8 sleepcount;
+extern u32 sleepcount;
+u8 temperate_flag = 1;
 
 const u8 *Menu_Item_Descrip[][2] =
 {   
@@ -362,6 +363,20 @@ void menu_pocess(void)
                          JumpToApp_pocess();
                     }
                 }           
+            }
+            else if(temperate_flag)
+            {
+                  u8 temp[10] = "";
+                  float temperate;
+                  temperate = T_display();
+                  temperate_flag = 0;
+                  temp[0] = (u8)temperate/10 + 0x30;
+                  temp[1] = (u8)temperate%10 + 0x30;
+                  temp[2] = '.';
+                  temp[3] = (temperate - (u8)temperate)*10 + 0x30;
+                  temp[4] = (u8)((temperate - (u8)temperate)*100)%10 + 0x30;
+                  temp[5] = 'C';
+                  TXM_StringDisplay(0,180,40,16,1,WHITE ,DGRAY, (void*)temp);  
             }
             delay_ms(10);
 }

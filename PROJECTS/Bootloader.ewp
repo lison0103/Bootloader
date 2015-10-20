@@ -2002,9 +2002,6 @@
       <name>$PROJ_DIR$\..\HARDWARE\stmflash.c</name>
     </file>
     <file>
-      <name>$PROJ_DIR$\..\HARDWARE\temperate_adc.c</name>
-    </file>
-    <file>
       <name>$PROJ_DIR$\..\HARDWARE\timer.c</name>
     </file>
   </group>

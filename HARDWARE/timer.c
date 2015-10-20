@@ -1,7 +1,6 @@
 #include "time.h"
 #include "time_display.h"
 #include "bsp_rtc_1302.h"
-#include "wakeup.h"
 #include "lcd.h"
 
 
@@ -59,7 +58,6 @@ void TIM3_IRQHandler(void)   //TIM3ÖÐ¶Ï
                             sleepcount = 0;
                             lcd_sleep = 1;
                             LCM_Light_Setting(5);
-                            //Sys_Enter_Standby();
                         }
                     }
                     else

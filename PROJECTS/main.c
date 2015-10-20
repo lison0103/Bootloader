@@ -11,22 +11,11 @@
 #include "sys.h"
 #include "usart.h"
 #include "flash.h"
-
 #include "malloc.h"  
-
 #include "menu.h"
 #include "usb.h"
 #include "fatfs.h"
 #include "lcd.h"
-
-
-
-
-
-//u32 Cpu_LockID;
-//
-//extern u32 Current_Date;
-
 
 int main(void)
 { 
@@ -42,11 +31,8 @@ int main(void)
         RCC_init();                  
         USART2_Init();          //USART2初始化，用作LCD数据传输                              
         LCM_Init();             //ZTM LCD初始化
-        
-        
+              
         enter_menu();           //判断是否进入Loader，等待约1s，按键F1进入，否则进入APP
-        
-        
         mem_init();		//初始化内存池
         SPI_Flash_Init();       //外部flash初始化        
         RTCC_Init();            //RTC初始化，rt1302
@@ -59,25 +45,16 @@ int main(void)
         
         //初始化一个定时器用作时间显示
         TIM3_Int_Init(4999,7199);//10Khz的计数频率，计数到5000为500ms
-        
-
-        
-//        Cpu_LockID = GetLockCode();
-//        printf("Cpu_LockID = %x\r\n",Cpu_LockID);
-//        
-//        printf("Confirm_word = %d\r\n",Cpu_LockID/1000 + Current_Date);
-//        
-//        printf("password = %d\r\n",(Cpu_LockID/1000 + Current_Date)*2 + 3);
+               
 
 /********************************************************************************************/	
                
-        while(1){    
+        while(1)
+        {    
           
-          menu_pocess();         //主程序       
-          
-          
+            menu_pocess();         //主程序       
+                   
 	}												 
-
         
 }
 	   

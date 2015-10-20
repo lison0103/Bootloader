@@ -10,6 +10,6 @@
 #include "usart.h"
 
 void Fatfs_init(void);
-u8 isFileExist(void);
+u8 isFileExist(char *filename);
 u8 UpdateApp(void);
 #endif

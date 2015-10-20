@@ -15,21 +15,10 @@
 #include "lcd.h"
 #include "timer.h"
 
-#if 0
-
-void RCC_init(void);
-void Lcd_init(void);
-void menu_item_display(void);
-void menu_pocess(void);
-
-#else
 void RCC_init(void);
 void menu_init(void);
 void menu_pocess(void);
 void enter_menu(void);
-
 extern u8 menu_item;
-
-#endif
 
 #endif

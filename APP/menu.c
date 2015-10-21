@@ -180,7 +180,7 @@ void enter_menu(void)
 /*******************************************************************************
 功能：连接电脑子程序
 *******************************************************************************/
-void ConnectToPc_pocess(void)
+void ConnectToPc_process(void)
 {
     if(usb_connect == 0)
     {
@@ -198,7 +198,7 @@ void ConnectToPc_pocess(void)
 /*******************************************************************************
 功能：断开USB电脑连接子程序
 *******************************************************************************/
-void DisconnectUsb_pocess(void)
+void DisconnectUsb_process(void)
 {
       if(usb_connect)
       {
@@ -219,7 +219,7 @@ void DisconnectUsb_pocess(void)
 /*******************************************************************************
 功能：更新APP子程序
 *******************************************************************************/
-void UpdateApp_pocess(void)
+void UpdateApp_process(void)
 {
     if(usb_connect == 0)
     {
@@ -279,7 +279,7 @@ void UpdateApp_pocess(void)
 /*******************************************************************************
 功能：跳转进入APP子程序
 *******************************************************************************/
-void JumpToApp_pocess(void)
+void JumpToApp_process(void)
 {
   if(usb_connect == 0)
   {
@@ -314,52 +314,52 @@ void menu_pocess(void)
             {
                 sleepcount = 0;
                 
-                if(lcd_sleep)                                   //若在lcd休眠，则退出
+                if(lcd_sleep)                                   //若lcd休眠，则退出
                 {
                     lcd_sleep = 0;                    
                     LCM_Light_Setting(50);
                     delay_ms(500);
                 }              
-                else if(key == KEY_F3)                          //语言切换
+                else if(key == KEY_F3)                          
                 {
                     delay_ms(1);
                     if(key == KEY_F3)
                     {
-                        LANGUAGE = (~LANGUAGE) & 0x01;
+                        LANGUAGE = (~LANGUAGE) & 0x01;          //语言切换
                         menu_init();
                         delay_ms(500);
                     }
                 }
-                else if(key==KEY_LEFT)			        //连接电脑
+                else if(key==KEY_LEFT)			        
                 {                  
                     delay_ms(1);
                     if(key==KEY_LEFT)
                     {               
-                        ConnectToPc_pocess();
+                        ConnectToPc_process();                  //连接电脑
                     }
                 }
-                else if(key==KEY_RIGHT)			        //断开连接
+                else if(key==KEY_RIGHT)			        
                 {                  
                     delay_ms(1);
                     if(key==KEY_RIGHT)
                     {    
-                         DisconnectUsb_pocess();         
+                         DisconnectUsb_process();               //断开连接
                     }
                 }
-                else if(key==KEY_UP)			        //更新APP，成功则进入程序
+                else if(key==KEY_UP)			        
                 {                  
                     delay_ms(1);
                     if(key==KEY_UP)
                     {
-                         UpdateApp_pocess();                  
+                         UpdateApp_process();                  //更新APP，成功则进入程序
                     }
                 }
-                else if(key==KEY_SET)			        //进入APP
+                else if(key==KEY_SET)			        
                 {
                     delay_ms(1);
                     if(key==KEY_SET)
                     {       
-                         JumpToApp_pocess();
+                         JumpToApp_process();                   //进入APP
                     }
                 }           
             }

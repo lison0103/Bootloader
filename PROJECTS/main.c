@@ -16,6 +16,7 @@
 #include "usb.h"
 #include "fatfs.h"
 #include "lcd.h"
+#include "iwdg.h"
 
 int main(void)
 { 
@@ -44,16 +45,17 @@ int main(void)
         menu_init();            //初始化菜单       
         
         //初始化一个定时器用作时间显示
-        TIM3_Int_Init(4999,7199);//10Khz的计数频率，计数到5000为500ms
+        TIM3_Int_Init(4999,7199);//10Khz的计数频率，计数到5000为500ms       
+//        wdt_init();             //初始化独立看门狗，5s复位
                
 
 /********************************************************************************************/	
                
         while(1)
-        {    
-          
+        {             
             menu_pocess();         //主程序       
-                   
+            
+//            IWDG_ReloadCounter();  //喂狗
 	}												 
         
 }

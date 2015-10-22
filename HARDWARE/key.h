@@ -5,7 +5,7 @@
 //#define OLDHW
 
 void key_init(void);
-u16 key_scan(void);
+u16 key_scan(u8 mode);
 
 #define KEY_SW2  GPIO_ReadInputDataBit(GPIOC,GPIO_Pin_1)
 #define KEY_SW3  GPIO_ReadInputDataBit(GPIOC,GPIO_Pin_2)

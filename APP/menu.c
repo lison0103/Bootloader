@@ -148,14 +148,10 @@ void enter_menu(void)
                   
           while(1)
           {           
-              key=key_scan();
+              key=key_scan(0);
               if(key==KEY_F1)			//KEY_F1按键按下
-              {
-                  delay_ms(50);
-                  if(key==KEY_F1)
-                  {                 
-                      break;                                   
-                  }
+              {                
+                  break;                                   
               }        
               delay_ms(100);
               timeover++;
@@ -309,58 +305,37 @@ void menu_pocess(void)
 {
             u8 key = 0;
     
-            key=key_scan();
-            if(key)                                             //按下任意按键
+            key=key_scan(0);
+            if(key)                                          //按下任意按键
             {
                 sleepcount = 0;
+                ZTM_SetBuzzer(10);                          //按键按下，蜂鸣器响一声
                 
-                if(lcd_sleep)                                   //若lcd休眠，则退出
+                if(lcd_sleep)                               //若lcd休眠，则退出
                 {
                     lcd_sleep = 0;                    
                     LCM_Light_Setting(50);
-                    delay_ms(500);
                 }              
                 else if(key == KEY_F3)                          
-                {
-                    delay_ms(1);
-                    if(key == KEY_F3)
-                    {
-                        LANGUAGE = (~LANGUAGE) & 0x01;          //语言切换
-                        menu_init();
-                        delay_ms(500);
-                    }
+                {                 
+                    LANGUAGE = (~LANGUAGE) & 0x01;          //语言切换
+                    menu_init();                 
                 }
                 else if(key==KEY_LEFT)			        
-                {                  
-                    delay_ms(1);
-                    if(key==KEY_LEFT)
-                    {               
-                        ConnectToPc_process();                  //连接电脑
-                    }
+                {                                
+                    ConnectToPc_process();                 //连接电脑
                 }
                 else if(key==KEY_RIGHT)			        
-                {                  
-                    delay_ms(1);
-                    if(key==KEY_RIGHT)
-                    {    
-                         DisconnectUsb_process();               //断开连接
-                    }
+                {                   
+                    DisconnectUsb_process();               //断开连接
                 }
                 else if(key==KEY_UP)			        
                 {                  
-                    delay_ms(1);
-                    if(key==KEY_UP)
-                    {
-                         UpdateApp_process();                  //更新APP，成功则进入程序
-                    }
+                    UpdateApp_process();                  //更新APP，成功则进入程序
                 }
                 else if(key==KEY_SET)			        
-                {
-                    delay_ms(1);
-                    if(key==KEY_SET)
-                    {       
-                         JumpToApp_process();                   //进入APP
-                    }
+                {      
+                    JumpToApp_process();                  //进入APP
                 }           
             }
             delay_ms(10);

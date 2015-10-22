@@ -10,10 +10,10 @@ extern u8 sleepcount;
 const u8 *Menu_Item_Descrip[][2] =
 {   
   {"Lang","语言"},
-  {" ←:连接电脑     "," ←:Connect to PC"},
-  {" →:断开电脑连接 "," →:Disconnect PC"},
-  {" ↑:更新APP      "," ↑:Update APP   "},
-  {" SET:进入APP     "," SET:Enter APP   "},
+  {" ←:连接电脑      "," ←:Connect to PC "},
+  {" →:断开电脑连接  "," →:Disconnect PC "},
+  {" ↑:更新APP       "," ↑:Update APP    "},
+  {" SET:进入APP      "," SET:Enter APP    "},
   
 };
 
@@ -21,17 +21,17 @@ const u8 *Status_Item_Descrip[][2] =
 {                                          
   
   {" 状态： 请选择    "," Status:  Select  "},
-  {"状态：连接电脑    "," Status: Connect  "},
-  {"状态：开始更新APP "," Status:  Update  "},
-  {"状态：APP更新完成 "," Status:  Finish  "},
-  {"状态：更新失败    "," Status:  Fail    "},
+  {" 状态：连接电脑   "," Status: Connect  "},
+  {" 状态：开始更新APP"," Status:  Update  "},
+  {" 状态：APP更新完成"," Status:  Finish  "},
+  {" 状态：更新失败   "," Status:  Fail    "},
   {"状态：无可更新固件"," Status: NO FILE  "},
   {" 状态：进入APP    "," Status: Enter APP"},
   {" 状态：无APP程序  "," Status:  NO APP  "},
-  {"状态：已断开电脑  "," Status:Disconnect"},
-  {"状态：USB已连接   "," Status:  Connect "},
-  {"状态：USB被拔出了 "," Status:Disconnect"},
-  {"状态：非合法程序  "," Status:  Illegal "},
+  {" 状态：已断开电脑 "," Status:Disconnect"},
+  {" 状态：USB已连接  "," Status:  Connect "},
+  {" 状态：USB被拔出了"," Status:Disconnect"},
+  {" 状态：非合法程序 "," Status:  Illegal "},
 };
 
 u8 *Version = {"V0.1"};
@@ -78,7 +78,7 @@ void menu_init(void)
       
       for(u8 i = 0;i < 4;i++)
       {
-          TXM_StringDisplay(0,30,70 + (i*45),24,1,YELLOW ,BLUE,  (void*)Menu_Item_Descrip[i+1][LANGUAGE]);
+          TXM_StringDisplay(0,20,70 + (i*45),24,1,YELLOW ,BLUE,  (void*)Menu_Item_Descrip[i+1][LANGUAGE]);
           delay_ms(5);                
       }
       
@@ -96,7 +96,7 @@ void menu_init(void)
       
       for(u8 i = 0;i < 4;i++)
       {
-          TXM_StringDisplay(0,30,70 + (i*45),24,1,YELLOW ,BLUE,  (void*)Menu_Item_Descrip[i+1][LANGUAGE]);
+          TXM_StringDisplay(0,20,70 + (i*45),24,1,YELLOW ,BLUE,  (void*)Menu_Item_Descrip[i+1][LANGUAGE]);
           delay_ms(5);                
       }    
       
@@ -107,21 +107,21 @@ void menu_init(void)
       }
       else if(2 == menu_item)//选择连接电脑
       {
-          TXM_StringDisplay(0,30,70,24,1,YELLOW ,RED,  (void*)Menu_Item_Descrip[1][LANGUAGE]);
+          TXM_StringDisplay(0,20,70,24,1,YELLOW ,RED,  (void*)Menu_Item_Descrip[1][LANGUAGE]);
           delay_ms(5); 
           TXM_StringDisplay(0,20,250,24,1,RED ,BLUE, (void*)Status_Item_Descrip[1][LANGUAGE]);
           delay_ms(5);       
       }  
       else if(3 == menu_item)//选择断开电脑
       {   
-          TXM_StringDisplay(0,30,115,24,1,YELLOW ,RED,  (void*)Menu_Item_Descrip[2][LANGUAGE]);
+          TXM_StringDisplay(0,20,115,24,1,YELLOW ,RED,  (void*)Menu_Item_Descrip[2][LANGUAGE]);
           delay_ms(5);      
           TXM_StringDisplay(0,20,250,24,1,RED ,BLUE, (void*)Status_Item_Descrip[8][LANGUAGE]);
           delay_ms(5);  
       } 
       else if(4 == menu_item)//选择更新APP
       {  
-          TXM_StringDisplay(0,30,160,24,1,YELLOW ,RED,  (void*)Menu_Item_Descrip[3][LANGUAGE]);
+          TXM_StringDisplay(0,20,160,24,1,YELLOW ,RED,  (void*)Menu_Item_Descrip[3][LANGUAGE]);
           delay_ms(5);
           TXM_StringDisplay(0,20,250,24,1,RED ,BLUE, (void*)Status_Item_Descrip[2][LANGUAGE]);
           delay_ms(5); 
@@ -129,7 +129,7 @@ void menu_init(void)
       } 
       else if(5 == menu_item)//选择进入APP
       {  
-          TXM_StringDisplay(0,30,205,24,1,YELLOW ,RED,  (void*)Menu_Item_Descrip[4][LANGUAGE]);
+          TXM_StringDisplay(0,20,205,24,1,YELLOW ,RED,  (void*)Menu_Item_Descrip[4][LANGUAGE]);
           delay_ms(5);      
           TXM_StringDisplay(0,20,250,24,1,RED ,BLUE, (void*)Status_Item_Descrip[6][LANGUAGE]);
           delay_ms(5);  

@@ -1,11 +1,7 @@
 #include "flash.h" 
 #include "spi.h"
 #include "delay.h"   
-//Mini STM32开发板
-//W25X16 驱动函数 
-//正点原子@ALIENTEK
-//2010/6/13
-//V1.0
+
 u16 SPI_FLASH_TYPE=W25Q64;//默认就是25Q64
 //4Kbytes为一个Sector
 //16个扇区为1个Block

@@ -118,9 +118,23 @@ u8 UpdateApp(void)
     
     printf("\r\n update res = %d \r\n",res);
     
-    f_close(fp);	
+    f_close(fp);	   
     myfree(fp);
     myfree(tempbuf);
     
     return res;  
 }
+
+/*******************************************************************************
+功能：删除升级固件
+返回：0：删除成功
+*******************************************************************************/
+u8 DeleteFile(void)
+{
+    FRESULT res;
+    
+    res = f_unlink("0:DU.bin");
+    
+    return res;
+}
+

@@ -238,6 +238,8 @@ void UpdateApp_process(void)
                   TXM_StringDisplay(0,20,250,24,1,RED ,BLUE, (void*)Status_Item_Descrip[3][LANGUAGE]);//状态：APP更新完成
                   printf("固件更新完成!\r\n");	
                   
+                  DeleteFile();//固件更新成功后删除
+                  
                   delay_ms(500);
                   if(((*(vu32*)(FLASH_APP1_ADDR+4))&0xFF000000)==0x08000000)//判断是否为0X08XXXXXX.
                   {	 

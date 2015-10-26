@@ -6,6 +6,7 @@ u8 menu_item = 0;
 u8 lcd_sleep = 0;
 u8 usb_connect = 0;
 extern u8 sleepcount;
+u8 App_Version[2] = {1,0};
 
 const u8 *Menu_Item_Descrip[][2] =
 {   
@@ -36,6 +37,25 @@ const u8 *Status_Item_Descrip[][2] =
 
 u8 *Version = {"V0.1"};
 
+/*******************************************************************************
+功能：APP版本号记录
+*******************************************************************************/
+void Version_init(void)
+{
+    if(1 != BKP_Read(BKP_ADDR1(1)))
+    {
+        BKP_Write(BKP_ADDR1(1),1);   
+        BKP_Write(BKP_ADDR1(2),1);
+        BKP_Write(BKP_ADDR1(3),0);
+        App_Version[0] = 1;
+        App_Version[1] = 0;
+    }  
+    else
+    {
+        App_Version[0] = BKP_Read(BKP_ADDR1(2));
+        App_Version[1] = BKP_Read(BKP_ADDR1(3));
+    }
+}
 
 /*******************************************************************************
 功能：RCC时钟初始化
@@ -194,7 +214,7 @@ void ConnectToPc_process(void)
 /*******************************************************************************
 功能：断开USB电脑连接子程序
 *******************************************************************************/
-void DisconnectUsb_process(void)
+u8 DisconnectUsb_process(void)
 {
       if(usb_connect)
       {
@@ -209,13 +229,16 @@ void DisconnectUsb_process(void)
             myfree(Bulk_Data_Buff);
         #endif
             delay_ms(500);   
-      }              
+            
+            return 1;
+      }     
+      return 0;
 }
 
 /*******************************************************************************
 功能：更新APP子程序
 *******************************************************************************/
-void UpdateApp_process(void)
+u8 UpdateApp_process(void)
 {
     if(usb_connect == 0)
     {
@@ -224,34 +247,40 @@ void UpdateApp_process(void)
       printf("初始化FATFS!!\r\n");                       
       
       u8 count = 3;
-      u8 res = 0;                               
+      u8 res = 0;   
+      char filestr[20] = {0};
       while(count)//失败重试三次
       {                               
-          Fatfs_init();                                                              
-          if(!isFileExist("0:DU.bin"))//判断固件是否存在
+          Fatfs_init();            
+          ReadDir("0:/", filestr);
+          if(!isFileExist(filestr))//判断固件是否存在
           {                                 
               printf("开始更新固件...\r\n");	
               
-              res = UpdateApp();
+              res = UpdateApp(filestr);
               if(!res)//从spi flash复制APP到stmflash中
               {	                                       
                   TXM_StringDisplay(0,20,250,24,1,RED ,BLUE, (void*)Status_Item_Descrip[3][LANGUAGE]);//状态：APP更新完成
                   printf("固件更新完成!\r\n");	
                   
-                  DeleteFile();//固件更新成功后删除
+                  DeleteFile(filestr);                          //固件更新成功后删除
+                  BKP_Write(BKP_ADDR1(2),App_Version[0]);       //记录更新固件版本号
+                  BKP_Write(BKP_ADDR1(3),App_Version[1]);
                   
-                  delay_ms(500);
-                  if(((*(vu32*)(FLASH_APP1_ADDR+4))&0xFF000000)==0x08000000)//判断是否为0X08XXXXXX.
-                  {	 
-                      TIM_Cmd(TIM3, DISABLE);
-                      delay_ms(500);
-                      iap_load_app(FLASH_APP1_ADDR);//执行FLASH APP代码
-                  }
-                  else 
-                  {
-                      printf("非FLASH应用程序,无法执行!\r\n");
-                      TXM_StringDisplay(0,20,250,24,1,RED ,BLUE, (void*)Status_Item_Descrip[7][LANGUAGE]);//状态：无APP程序                   
-                  }
+                  return 1;
+                  
+//                  delay_ms(500);
+//                  if(((*(vu32*)(FLASH_APP1_ADDR+4))&0xFF000000)==0x08000000)//判断是否为0X08XXXXXX.
+//                  {	 
+//                      TIM_Cmd(TIM3, DISABLE);
+//                      delay_ms(500);
+//                      iap_load_app(FLASH_APP1_ADDR);//执行FLASH APP代码
+//                  }
+//                  else 
+//                  {
+//                      printf("非FLASH应用程序,无法执行!\r\n");
+//                      TXM_StringDisplay(0,20,250,24,1,RED ,BLUE, (void*)Status_Item_Descrip[7][LANGUAGE]);//状态：无APP程序                   
+//                  }
               }
               else if(FR_INVALID_OBJECT == res)
               {
@@ -272,6 +301,7 @@ void UpdateApp_process(void)
           count--;
       }
     } 
+    return 0;
 }
 
 /*******************************************************************************
@@ -329,18 +359,37 @@ void menu_pocess(void)
                 }
                 else if(key==KEY_RIGHT)			        
                 {                   
-                    DisconnectUsb_process();               //断开连接
+                  if(DisconnectUsb_process())                //断开连接
+                  {
+                      delay_ms(1000);
+                      if(UpdateApp_process())
+                      {
+                          JumpToApp_process();
+                      }
+                  }
                 }
                 else if(key==KEY_UP)			        
                 {                  
-                    UpdateApp_process();                  //更新APP，成功则进入程序
+                    if(UpdateApp_process())                  //更新APP，成功则进入程序
+                    {
+                        JumpToApp_process();
+                    }
                 }
                 else if(key==KEY_SET)			        
                 {      
                     JumpToApp_process();                  //进入APP
                 }           
             }
-            delay_ms(10);
+            else if(usb_connect)
+            {
+                UsbMassStor_Status();                       //usb状态显示
+//                if(usb_connect == 0)
+//                {
+//                    delay_ms(1000);
+//                    UpdateApp_process();
+//                }
+            }
+//            delay_ms(10);
 }
 
 

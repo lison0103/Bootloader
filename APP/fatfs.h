@@ -11,6 +11,7 @@
 
 void Fatfs_init(void);
 u8 isFileExist(char *filename);
-u8 UpdateApp(void);
-u8 DeleteFile(void);
+u8 UpdateApp(char *filename);
+u8 DeleteFile(char *filename);
+u8 ReadDir(u8 * path, char filestr[]);
 #endif

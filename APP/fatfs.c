@@ -80,7 +80,7 @@ u8 isFileExist(char *filename)
 功能：更新APP
 返回：0 更新成功
 *******************************************************************************/
-u8 UpdateApp(void)
+u8 UpdateApp(char *filename)
 {
     FIL* fp;
     FRESULT res;
@@ -94,7 +94,7 @@ u8 UpdateApp(void)
     
     if(fp != NULL && tempbuf != NULL)
     {      
-        res = f_open(fp,"0:DU.bin",FA_READ);    
+        res = f_open(fp,filename,FA_READ);    
         printf("\r\n open res = %d \r\n",res);
         
         while(res==FR_OK)//死循环执行
@@ -129,12 +129,75 @@ u8 UpdateApp(void)
 功能：删除升级固件
 返回：0：删除成功
 *******************************************************************************/
-u8 DeleteFile(void)
+u8 DeleteFile(char *filename)
 {
     FRESULT res;
     
-    res = f_unlink("0:DU.bin");
+    res = f_unlink(filename);
     
     return res;
 }
 
+
+/*******************************************************************************
+功能：读取目录下的文件
+返回：0：删除成功
+*******************************************************************************/
+extern u8 App_Version[2];
+u8 ReadDir(u8 * path, char str[])
+{
+    FRESULT res;
+    char *fn;   /* This function is assuming non-Unicode cfg. */
+    char updatestr[20] = "DU_V1_0.bin";
+    u8 flag = 0;
+#if _USE_LFN
+    fileinfo.lfsize = _MAX_LFN * 2 + 1;
+    fileinfo.lfname = mymalloc(fileinfo.lfsize);
+#endif	
+    res = f_opendir(&dir,(const TCHAR*)path); //打开一个目录
+    if (res == FR_OK) 
+    {	
+//      printf("\r\n"); 
+      while(1)
+      {
+        res = f_readdir(&dir, &fileinfo);                   //读取目录下的一个文件
+        if (res != FR_OK || fileinfo.fname[0] == 0) break;  //错误了/到末尾了,退出
+        //if (fileinfo.fname[0] == '.') continue;             //忽略上级目录
+#if _USE_LFN
+        fn = *fileinfo.lfname ? fileinfo.lfname : fileinfo.fname;
+#else							   
+        fn = fileinfo.fname;
+#endif	                                              /* It is a file. */
+        
+        for(u8 i = 0; i < 11; i++)
+        {
+            if(fn[i] != updatestr[i])
+            {
+                if(i == 4 || i == 6)
+                {
+                    flag = 2;
+                }
+                else
+                {
+                    flag = 1;
+                    break;
+                }
+            }
+        }
+        if(flag == 2)
+        {
+            flag = 0;
+            if(App_Version[0] < fn[4] || App_Version[1] <= fn[4] && App_Version[1] < fn[6])
+            {
+                App_Version[0] = fn[4] - 0x30;
+                App_Version[1] = fn[6] - 0x30;
+
+                sprintf(str, "%s%s",path,fn);
+                break;
+            }
+        }
+      } 
+    }	  
+    myfree(fileinfo.lfname);
+    return res;	  
+}

@@ -14,11 +14,13 @@
 #include "time_display.h"
 #include "lcd.h"
 #include "timer.h"
+#include "bkp.h"
 
 void RCC_init(void);
 void menu_init(void);
 void menu_pocess(void);
 void enter_menu(void);
+void Version_init(void);
 extern u8 menu_item;
 
 #endif

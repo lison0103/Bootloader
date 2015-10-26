@@ -19,5 +19,5 @@
 void usb_port_set(u8 enable);
 void USBD_Init(void);
 void UsbMassStor_init(void);
-
+void UsbMassStor_Status(void);
 #endif

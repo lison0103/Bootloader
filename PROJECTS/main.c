@@ -17,6 +17,7 @@
 #include "fatfs.h"
 #include "lcd.h"
 #include "iwdg.h"
+#include "bkp.h"
 
 int main(void)
 { 
@@ -37,6 +38,8 @@ int main(void)
         mem_init();		//初始化内存池
         SPI_Flash_Init();       //外部flash初始化        
         RTCC_Init();            //RTC初始化，rt1302
+        BKP_Init();             //BKP寄存器初始化
+        Version_init();
         
  	if(exfuns_init())		//为fatfs相关变量申请内存
         {
@@ -48,7 +51,6 @@ int main(void)
         TIM3_Int_Init(4999,7199);//10Khz的计数频率，计数到5000为500ms       
 //        wdt_init();             //初始化独立看门狗，5s复位
                
-
 /********************************************************************************************/	
                
         while(1)

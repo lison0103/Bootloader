@@ -1987,6 +1987,9 @@
   <group>
     <name>HARDWARE</name>
     <file>
+      <name>$PROJ_DIR$\..\HARDWARE\bkp.c</name>
+    </file>
+    <file>
       <name>$PROJ_DIR$\..\HARDWARE\bsp_rtc_1302.c</name>
     </file>
     <file>

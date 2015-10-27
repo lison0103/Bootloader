@@ -35,7 +35,7 @@ const u8 *Status_Item_Descrip[][2] =
   {" 状态：非合法程序 "," Status:  Illegal "},
 };
 
-u8 *Version = {"V0.1"};
+extern u8 *Version;
 
 /*******************************************************************************
 功能：APP版本号记录
@@ -267,20 +267,7 @@ u8 UpdateApp_process(void)
                   BKP_Write(BKP_ADDR1(2),App_Version[0]);       //记录更新固件版本号
                   BKP_Write(BKP_ADDR1(3),App_Version[1]);
                   
-                  return 1;
-                  
-//                  delay_ms(500);
-//                  if(((*(vu32*)(FLASH_APP1_ADDR+4))&0xFF000000)==0x08000000)//判断是否为0X08XXXXXX.
-//                  {	 
-//                      TIM_Cmd(TIM3, DISABLE);
-//                      delay_ms(500);
-//                      iap_load_app(FLASH_APP1_ADDR);//执行FLASH APP代码
-//                  }
-//                  else 
-//                  {
-//                      printf("非FLASH应用程序,无法执行!\r\n");
-//                      TXM_StringDisplay(0,20,250,24,1,RED ,BLUE, (void*)Status_Item_Descrip[7][LANGUAGE]);//状态：无APP程序                   
-//                  }
+                  return 1;                  
               }
               else if(FR_INVALID_OBJECT == res)
               {

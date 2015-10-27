@@ -2,9 +2,9 @@
 ** File Name:           main.c
 ** Created By:          lisonchen
 ** Created date:        2015-09-08
-** Version:             v0.1
+** Version:             v0.2
 ** Descriptions:        Bootloader
-**
+** Last Update:         2015-10-27           
 *********************************************************************************************************/
 
 #include "delay.h"
@@ -18,6 +18,8 @@
 #include "lcd.h"
 #include "iwdg.h"
 #include "bkp.h"
+
+u8 *Version = {"V0.2"};
 
 int main(void)
 { 

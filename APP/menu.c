@@ -45,10 +45,10 @@ void Version_init(void)
     if(1 != BKP_Read(BKP_ADDR1(1)))
     {
         BKP_Write(BKP_ADDR1(1),1);   
-        BKP_Write(BKP_ADDR1(2),1);
-        BKP_Write(BKP_ADDR1(3),0);
-        App_Version[0] = 1;
-        App_Version[1] = 0;
+        BKP_Write(BKP_ADDR1(2),'1');
+        BKP_Write(BKP_ADDR1(3),'0');
+        App_Version[0] = '1';
+        App_Version[1] = '0';
     }  
     else
     {

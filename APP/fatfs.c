@@ -187,10 +187,10 @@ u8 ReadDir(u8 * path, char str[])
         if(flag == 2)
         {
             flag = 0;
-            if(App_Version[0] < fn[4] || App_Version[1] <= fn[4] && App_Version[1] < fn[6])
+            if(App_Version[0] < fn[4] || (App_Version[0] <= fn[4] && App_Version[1] < fn[6]))
             {
-                App_Version[0] = fn[4] - 0x30;
-                App_Version[1] = fn[6] - 0x30;
+                App_Version[0] = fn[4];
+                App_Version[1] = fn[6];
 
                 sprintf(str, "%s%s",path,fn);
                 break;

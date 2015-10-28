@@ -149,6 +149,7 @@ u8 ReadDir(u8 * path, char str[])
     FRESULT res;
     char *fn;   /* This function is assuming non-Unicode cfg. */
     char updatestr[20] = "DU_V1_0.bin";
+    char forceupdatestr[10] = "DU.bin";
     u8 flag = 0;
 #if _USE_LFN
     fileinfo.lfsize = _MAX_LFN * 2 + 1;
@@ -168,23 +169,31 @@ u8 ReadDir(u8 * path, char str[])
 #else							   
         fn = fileinfo.fname;
 #endif	                                              /* It is a file. */
-        
-        for(u8 i = 0; i < 11; i++)
+        if(fn[0] == forceupdatestr[0] && fn[1] == forceupdatestr[1] && fn[2] == forceupdatestr[2] && 
+           fn[3] == forceupdatestr[3] && fn[4] == forceupdatestr[4] && fn[5] == forceupdatestr[5] && 
+           fn[6] == forceupdatestr[6])
         {
-            if(fn[i] != updatestr[i])
+            flag = 3;
+        }
+        else
+        {
+            for(u8 i = 0; i < 11; i++)
             {
-                if(i == 4 || i == 6)
+                if(fn[i] != updatestr[i])
                 {
-                    flag = 2;
-                }
-                else
-                {
-                    flag = 1;
-                    break;
+                    if(i == 4 || i == 6)
+                    {
+                        flag = 2;
+                    }
+                    else
+                    {
+                        flag = 1;
+                        break;
+                    }
                 }
             }
         }
-        if(flag == 2)
+        if(flag == 2)//版本号升级
         {
             flag = 0;
             if(App_Version[0] < fn[4] || (App_Version[0] <= fn[4] && App_Version[1] < fn[6]))
@@ -195,6 +204,14 @@ u8 ReadDir(u8 * path, char str[])
                 sprintf(str, "%s%s",path,fn);
                 break;
             }
+        }
+        else if(flag == 3)//强制升级，并把版本号记录为1.0
+        {
+                App_Version[0] = '1';
+                App_Version[1] = '0';
+
+                sprintf(str, "%s%s",path,fn);
+                break;        
         }
       } 
     }	  

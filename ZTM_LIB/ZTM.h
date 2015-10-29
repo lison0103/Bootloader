@@ -882,7 +882,7 @@ extern INT8U TXM_DigitDisplay(u16 tid,
 //option
 extern INT8U TXM_DigitDisplayWidget(INT16U Tid, INT16U len, INT32U dat);
 
-
+extern void ZTM_DisBufSwitch (INT8U ucCmd);
 
 #endif
 /*********************************************************************************************************

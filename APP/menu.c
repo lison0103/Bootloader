@@ -35,7 +35,54 @@ const u8 *Status_Item_Descrip[][2] =
   {" 状态：非合法程序 "," Status:  Illegal "},
 };
 
+const u8 *Status_Descrip[][2] =
+{                                          
+  
+  {" 连接中..."  ," Connecting..."},
+  {" 连接断开！" ," Disconnect! "},
+  {" 更新固件..."," Update..."},
+  {" 进入APP！"  ," Enter APP!"},
+  {" USB正在写入数据!"," USB is writing!"},
+  {" USB正在读出数据!"," USB is read!   "},
+  {" 请稍后...       "," Please wait... "},  
+  {" 无可更新固件!"," No Update File!"},
+};
+
 extern u8 *Version;
+
+/*******************************************************************************
+功能：图层显示
+参数：
+*******************************************************************************/
+void Framebuffer_display(u16 x1, u16 y1, u16 x2, u16 y2, u8 size, const u8 *buf1, const u8 *buf2, u16 tms)
+{
+    TIM_Cmd(TIM3, DISABLE);                             //时间显示会闪烁，暂时无法解决，先暂停定时器
+    
+    ZTM_DisBufSwitch(0x00);                                             /* 取消自动缓存管理             */
+    ZTM_DisBufSwitch(0x20);                                             /* 写指针指向备用缓存           */
+    
+    TXM_StringDisplay(0,x1,y1,size,1,WHITE ,DGRAY,(void*)buf1);
+    TXM_StringDisplay(0,x2,y2,size,1,WHITE ,DGRAY,(void*)buf2);
+    
+    ZTM_DisBufSwitch(0x40);                                             /* 将显示缓存设置为备用缓存     */
+    delay_ms(tms);
+    
+    ZTM_DisBufSwitch(0x20);                                             /* 写指针指向主缓存             */
+    ZTM_DisBufSwitch(0x40);                                             /* 将显示缓存设置为主缓存       */
+    ZTM_DisBufSwitch(0x10);                                             /* 使能自动缓存管理             */   
+
+    TIM_Cmd(TIM3, ENABLE);
+}
+
+/*******************************************************************************
+功能：读取语言设置
+*******************************************************************************/
+void Language_init(void)
+{
+    u8 addr[1] = {0};
+    SPI_Flash_Read(addr,11,1);// 11为APP设置的保存语言的地址
+    LANGUAGE = addr[0];
+}
 
 /*******************************************************************************
 功能：APP版本号记录
@@ -208,7 +255,8 @@ void ConnectToPc_process(void)
         Fatfs_init();
         
         printf("\r\n初始化USB!!\r\n");
-        UsbMassStor_init();                         
+        UsbMassStor_init();    
+        Framebuffer_display(40,130,30,154,24,Status_Descrip[0][LANGUAGE],"",2000);
     }  
 }
 /*******************************************************************************
@@ -216,7 +264,15 @@ void ConnectToPc_process(void)
 *******************************************************************************/
 u8 DisconnectUsb_process(void)
 {
-      if(usb_connect)
+      if(usb_connect && (USB_STATUS_REG&0x01))
+      {
+          Framebuffer_display(25,130,25,154,24,Status_Descrip[4][LANGUAGE],Status_Descrip[6][LANGUAGE],2000);
+      }
+      else if(usb_connect && (USB_STATUS_REG&0x01))
+      {
+          Framebuffer_display(25,130,25,154,24,Status_Descrip[5][LANGUAGE],Status_Descrip[6][LANGUAGE],2000);
+      }
+      else if(usb_connect)
       {
             usb_connect = 0;
             menu_item = 3;
@@ -230,6 +286,7 @@ u8 DisconnectUsb_process(void)
         #endif
             delay_ms(500);   
             
+            Framebuffer_display(40,130,30,154,24,Status_Descrip[1][LANGUAGE],"",1000);
             return 1;
       }     
       return 0;
@@ -255,11 +312,12 @@ u8 UpdateApp_process(void)
           ReadDir("0:/", filestr);
           if(!isFileExist(filestr))//判断固件是否存在
           {                                 
-              printf("开始更新固件...\r\n");	
+              printf("开始更新固件...\r\n");
+              Framebuffer_display(40,130,30,154,24,Status_Descrip[2][LANGUAGE],"",1500);
               
               res = UpdateApp(filestr);
               if(!res)//从spi flash复制APP到stmflash中
-              {	                                       
+              {	    
                   TXM_StringDisplay(0,20,250,24,1,RED ,BLUE, (void*)Status_Item_Descrip[3][LANGUAGE]);//状态：APP更新完成
                   printf("固件更新完成!\r\n");	
                   
@@ -282,6 +340,7 @@ u8 UpdateApp_process(void)
           else 
           {
               TXM_StringDisplay(0,20,250,24,1,RED ,BLUE, (void*)Status_Item_Descrip[5][LANGUAGE]);//状态：无可更新固件
+              Framebuffer_display(40,130,30,154,24,Status_Descrip[7][LANGUAGE],"",1500);
               printf("没有可以更新的固件!\r\n");
               break;                        
           }
@@ -305,6 +364,7 @@ void JumpToApp_process(void)
       printf("开始执行FLASH用户代码!!\r\n");
       if(((*(vu32*)(FLASH_APP1_ADDR+4))&0xFF000000)==0x08000000)//判断是否为0X08XXXXXX.
       {	 
+          Framebuffer_display(40,130,30,154,24,Status_Descrip[3][LANGUAGE],"",1000);
           TIM_Cmd(TIM3, DISABLE);
           delay_ms(500);
           iap_load_app(FLASH_APP1_ADDR);//执行FLASH APP代码
@@ -312,7 +372,7 @@ void JumpToApp_process(void)
       else 
       {
           printf("非FLASH应用程序,无法执行!\r\n");
-          TXM_StringDisplay(0,20,250,24,1,RED ,BLUE, (void*)Status_Item_Descrip[7][LANGUAGE]);//状态：无APP程序                   
+          TXM_StringDisplay(0,30,250,24,1,RED ,BLUE, (void*)Status_Item_Descrip[7][LANGUAGE]);//状态：无APP程序                   
       }	               
   }
 }
@@ -343,11 +403,13 @@ void menu_pocess(void)
                 else if(key==KEY_LEFT)			        
                 {                                
                     ConnectToPc_process();                 //连接电脑
+                    
                 }
                 else if(key==KEY_RIGHT)			        
                 {                   
                   if(DisconnectUsb_process())                //断开连接
                   {
+                      
                       delay_ms(1000);
                       if(UpdateApp_process())
                       {
@@ -365,7 +427,17 @@ void menu_pocess(void)
                 else if(key==KEY_SET)			        
                 {      
                     JumpToApp_process();                  //进入APP
-                }           
+                } 
+                else if(key == KEY_F2)                          
+                {                 
+//                    ZTM_DisBufSwitch(0x40);
+//                  Framebuffer_display();
+//                  delay_ms(500);
+//                  Framebuffer_display();
+//                  delay_ms(500);
+//                  Framebuffer_display();
+//                  delay_ms(500);
+                }
             }
             else if(usb_connect)
             {

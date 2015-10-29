@@ -41,7 +41,8 @@ int main(void)
         SPI_Flash_Init();       //外部flash初始化        
         RTCC_Init();            //RTC初始化，rt1302
         BKP_Init();             //BKP寄存器初始化
-        Version_init();
+        Version_init();         //读取APP更新到的版本号
+        Language_init();        //读取APP设置的语言
         
  	if(exfuns_init())		//为fatfs相关变量申请内存
         {
@@ -52,7 +53,7 @@ int main(void)
         //初始化一个定时器用作时间显示
         TIM3_Int_Init(4999,7199);//10Khz的计数频率，计数到5000为500ms       
 //        wdt_init();             //初始化独立看门狗，5s复位
-               
+     
 /********************************************************************************************/	
                
         while(1)

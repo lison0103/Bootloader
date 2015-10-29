@@ -66,6 +66,7 @@ void UsbMassStor_init(void)
 {
         offline_cnt=0;
 	tct=0;
+        Divece_STA = UNCONNECTED;
 
         printf("\r\n USB MASS STORAGE init! \r\n");
         
@@ -100,7 +101,7 @@ void UsbMassStor_init(void)
 *******************************************************************************/
 void UsbMassStor_Status(void)
 {
-   
+ 						   			  	   	 										 
     if(Divece_STA!=bDeviceState) 
     {
         if(bDeviceState==CONFIGURED)
@@ -116,26 +117,29 @@ void UsbMassStor_Status(void)
         }
         Divece_STA=bDeviceState;
     }
-    tct++;
-    delay_ms(1);
-    if(tct==200)
+    if(bDeviceState==CONFIGURED)
     {
-        tct=0;
-        if(USB_STATUS_REG&0x10)
+        tct++;
+        delay_ms(15);
+        if(tct==200)
         {
-            offline_cnt=0;//USB连接了,则清除offline计数器
-            bDeviceState=CONFIGURED;
-        }
-        else//没有得到轮询 
-        {
-            offline_cnt++;  
-            if(offline_cnt>20)
+            tct=0;
+            if(USB_STATUS_REG&0x10)
             {
-                bDeviceState=UNCONNECTED;//2s内没收到在线标记,代表USB被拔出了
-//                DisconnectUsb_process(); //电脑上断开连接，调用断开连接子程序，暂时不断开，因为是轮询无法百分百确定是否断开或者第一次连接在装驱动
+                offline_cnt=0;//USB连接了,则清除offline计数器
+                bDeviceState=CONFIGURED;
             }
-        }
-        USB_STATUS_REG=0;
-    }      
+            else//没有得到轮询 
+            {
+                offline_cnt++;  
+                if(offline_cnt>1)
+                {
+                    bDeviceState=UNCONNECTED;//2s内没收到在线标记,代表USB被拔出了
+                    DisconnectUsb_process(); //电脑上断开连接，调用断开连接子程序
+                }
+            }
+            USB_STATUS_REG=0;
+        }      
+    }
         
 }

@@ -109,8 +109,8 @@ void Version_init(void)
 *******************************************************************************/
 void RCC_init(void)
 {
-  
-  
+//    RCC_DeInit();
+    
     RCC_AHBPeriphClockCmd(RCC_AHBPeriph_DMA1, ENABLE); //for dma  
     
     RCC_APB2PeriphClockCmd(RCC_APB2Periph_AFIO, ENABLE);//为外部中断
@@ -124,7 +124,47 @@ void RCC_init(void)
                              ENABLE); //端口时钟使能  
   
 }
-
+void RCC_Configuration(uint32_t PLLMul)
+{
+  ErrorStatus HSEStatus;
+  
+  SystemInit();
+  
+  RCC_DeInit(); //时钟初始化
+  RCC_HSEConfig(RCC_HSE_ON); //打开外部时钟
+  HSEStatus = RCC_WaitForHSEStartUp(); //读取外部时钟状态
+  if(HSEStatus == SUCCESS) //启动成功
+  {
+      FLASH_PrefetchBufferCmd(FLASH_PrefetchBuffer_Enable); //预取指缓存使能 
+      FLASH_SetLatency(FLASH_Latency_2); //设置代码延时。这里是二个周期
+      RCC_HCLKConfig(RCC_SYSCLK_Div1);//设置AHB的时钟HCLK 	  
+      RCC_PCLK2Config(RCC_HCLK_Div1); //高速总线选用的就是HCLK	
+      RCC_PCLK1Config(RCC_HCLK_Div2);	  //低速总线用的是HCLK的2分频
+      RCC_PLLConfig(RCC_PLLSource_HSE_Div1, RCC_PLLMul_9);//选择PLL的输入时钟以及它的分频系数	
+      RCC_PLLCmd(ENABLE);	//使能PLL锁相环
+      while(RCC_GetFlagStatus(RCC_FLAG_PLLRDY) == RESET)
+      {
+        ;
+      }			 //等待LL锁相环稳定
+      RCC_SYSCLKConfig(RCC_SYSCLKSource_PLLCLK);//选择PLL锁相环为系统时钟	
+      while(RCC_GetSYSCLKSource() != 0x08) //检验输出的系统时钟是不是由锁相环提供的
+      {
+        ;
+      }
+  }
+  
+  RCC_AHBPeriphClockCmd(RCC_AHBPeriph_DMA1, ENABLE); //for dma  
+  
+  RCC_APB2PeriphClockCmd(RCC_APB2Periph_AFIO, ENABLE);//为外部中断
+  
+  RCC_APB1PeriphClockCmd(RCC_APB1Periph_USART2 , ENABLE); //USART2 时钟使能
+  
+  RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA  
+                         |RCC_APB2Periph_GPIOB   
+                           |RCC_APB2Periph_GPIOC,
+                           
+                           ENABLE); //端口时钟使能  
+}
 /*******************************************************************************
 功能：菜单显示
 *******************************************************************************/

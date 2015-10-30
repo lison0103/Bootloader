@@ -24,15 +24,15 @@ u8 *Version = {"V0.2"};
 int main(void)
 { 
   
+//        RCC_init(); 
+        RCC_Configuration(RCC_PLLMul_9);//时钟初始化
 	NVIC_Configuration();	 //中断分组设置
 	delay_init();	    	 //延时函数初始化	          					
         hardware_init();        //硬件版本确认初始化  
 #if EN_USART3_PRINTF
 	uart_init(9600);	 //USART3初始化为9600,用作串口log打印
-#endif
-        	               
-        key_init();             //按键初始化       
-        RCC_init();                  
+#endif        	               
+        key_init();             //按键初始化                               
         USART2_Init();          //USART2初始化，用作LCD数据传输                              
         LCM_Init();             //ZTM LCD初始化
               

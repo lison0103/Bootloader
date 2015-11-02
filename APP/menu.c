@@ -252,32 +252,40 @@ void enter_menu(void)
 {
           u8 key = 0;
           u8 timeover = 0;
+          
+          if(1 == BKP_Read(BKP_ADDR1(5)))
+          {
+              BKP_Write(BKP_ADDR1(5),0); 
+              delay_ms(1000);
+          }
+          else
+          {          
+              while(1)
+              {           
+                  key=key_scan(0);
+                  if(key==KEY_F1)			//KEY_F1按键按下
+                  {                
+                      break;                                   
+                  }        
+                  delay_ms(100);
+                  timeover++;
+                  printf("enter_menu:timeover = %d\r\n", timeover);
                   
-          while(1)
-          {           
-              key=key_scan(0);
-              if(key==KEY_F1)			//KEY_F1按键按下
-              {                
-                  break;                                   
-              }        
-              delay_ms(100);
-              timeover++;
-              printf("enter_menu:timeover = %d\r\n", timeover);
-              
-              if(timeover >= 10)
-              {                
-                  printf("开始执行FLASH用户代码!!\r\n");
-                  if(((*(vu32*)(FLASH_APP1_ADDR+4))&0xFF000000)==0x08000000)//判断是否为0X08XXXXXX.
-                  {	 
-                      iap_load_app(FLASH_APP1_ADDR);//执行FLASH APP代码
+                  if(timeover >= 10)
+                  {                
+                      printf("开始执行FLASH用户代码!!\r\n");
+                      if(((*(vu32*)(FLASH_APP1_ADDR+4))&0xFF000000)==0x08000000)//判断是否为0X08XXXXXX.
+                      {	 
+                          iap_load_app(FLASH_APP1_ADDR);//执行FLASH APP代码
+                      }
+                      else 
+                      {
+                          printf("非FLASH应用程序,无法执行!\r\n");
+                          break;                   
+                      }                 
                   }
-                  else 
-                  {
-                      printf("非FLASH应用程序,无法执行!\r\n");
-                      break;                   
-                  }                 
               }
-          }          
+          }
 }
 
 /*******************************************************************************

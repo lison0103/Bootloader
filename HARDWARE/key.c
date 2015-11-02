@@ -61,10 +61,19 @@ void Delay_us(uint32_t n)
 u16 key_scan(u8 mode)
 {
     static u8 key_up = 1;
-    if(mode) key_up = 1;
-  
+    static u32 count = 0;
+
     if(HARDWARE_V2 == GetHardwareVerison())
     {
+          if(mode) 
+          {
+              count++;
+              if(count == 200000)//通过计数来实现连按模式，比较简单
+              {
+                count = 0;
+                key_up = 1;     
+              }
+          }
                     
           if(key_up && (KEY_SW2==0||KEY_SW3==0||KEY_SW4==0||KEY_SW5==0||KEY_SW6==0||KEY_SW7==0||KEY_SW8==0||KEY_SW9==0||KEY_SW10==0))
           {
@@ -107,7 +116,17 @@ u16 key_scan(u8 mode)
           GPIOC->BSRR |= j;
             
           j<<=1;
-        }  
+        } 
+        
+        if(mode) 
+        {
+            count++;
+            if(count == 800)//通过计数来实现连按模式，比较简单
+            {
+              count = 0;
+              key_up = 1;     
+            }
+        }
         
         if(key_up&&key_temp)
         {
@@ -116,6 +135,10 @@ u16 key_scan(u8 mode)
         }
         else if(key_temp == 0)key_up = 1;
 
+        return 0;
+    }
+    else
+    {
         return 0;
     }
 }

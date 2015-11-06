@@ -14,12 +14,15 @@
 
 #define EX_FLASH 0	//外部flash,卷标为0
 
-#define FLASH_SECTOR_SIZE 	512			  
-//对于W25Q64 		 			    
-u16	    FLASH_SECTOR_COUNT= 8192;	//4M字节,默认为W25Q64
-#define FLASH_BLOCK_SIZE   	8     	//每个BLOCK有8个扇区
+#define FLASH_SECTOR_SIZE 	4096	        //每个扇区4096字节/4k		  		 			   
 
-#define OFFSETADDR 	(4*1024 + 0)*1024				//从4M+0K地址开始的
+#define FLASH_BLOCK_SIZE   	16     	        //每个BLOCK有16个扇区
+
+#define	FLASH_SECTOR_COUNT      1024	        //W25Q64有8M字节，16*128个扇区，这里只要4M字节，所以扇区数位16*64=1024
+
+#define OFFSETADDR 	(4*1024 + 0)*1024	//从W25Q64的4M+0K地址开始的
+
+u16  FlashSectorCount = 1024;
 
 //初始化磁盘
 DSTATUS disk_initialize (
@@ -32,8 +35,8 @@ DSTATUS disk_initialize (
 
 		case EX_FLASH://外部flash
 			SPI_Flash_Init();
-			if(SPI_FLASH_TYPE==W25Q64)FLASH_SECTOR_COUNT=8192;	//W25Q64
-			else FLASH_SECTOR_COUNT=0;							//其他
+			if(SPI_FLASH_TYPE==W25Q64)FlashSectorCount=FLASH_SECTOR_COUNT;	//W25Q64
+			else FlashSectorCount=0;					//其他
  			break;
 		default:
 			res=1; 
@@ -150,7 +153,7 @@ DRESULT disk_ioctl (
 		        res = RES_OK;
 		        break;	 
 		    case GET_SECTOR_COUNT:
-		        *(DWORD*)buff = FLASH_SECTOR_COUNT;
+		        *(DWORD*)buff = FlashSectorCount;
 		        res = RES_OK;
 		        break;
 		    default:

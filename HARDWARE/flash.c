@@ -7,6 +7,8 @@ u16 SPI_FLASH_TYPE=W25Q64;//默认就是25Q64
 //16个扇区为1个Block
 //W25X16
 //容量为2M字节,共有32个Block,512个Sector 
+//W25Q64
+//容量为8M字节,共有128个Block,2048个Sector 
 
 //初始化SPI FLASH的IO口
 void SPI_Flash_Init(void)

@@ -3,11 +3,9 @@
 #include "delay.h"   
 
 u16 SPI_FLASH_TYPE=W25Q64;//默认就是25Q64
+//W25Q64
 //4Kbytes为一个Sector
 //16个扇区为1个Block
-//W25X16
-//容量为2M字节,共有32个Block,512个Sector 
-//W25Q64
 //容量为8M字节,共有128个Block,2048个Sector 
 
 //初始化SPI FLASH的IO口
@@ -71,7 +69,7 @@ void SPI_FLASH_Write_Disable(void)
     SPI1_ReadWriteByte(W25X_WriteDisable);     //发送写禁止指令    
 	SPI_FLASH_CS=1;                            //取消片选     	      
 } 			    
-//读取芯片ID W25X16的ID:0XEF14
+//读取芯片ID W25Q64的ID:0XEF16
 u16 SPI_Flash_ReadID(void)
 {
 	u16 Temp = 0;	  
@@ -128,7 +126,7 @@ void SPI_Flash_Write_Page(u8* pBuffer,u32 WriteAddr,u16 NumByteToWrite)
 //在指定地址开始写入指定长度的数据,但是要确保地址不越界!
 //pBuffer:数据存储区
 //WriteAddr:开始写入的地址(24bit)
-//NumByteToWrite:要写入的字节数(最大65535)
+//NumByteToWrite:要写入的字节数(最大65535(u16))
 //CHECK OK
 void SPI_Flash_Write_NoCheck(u8* pBuffer,u32 WriteAddr,u16 NumByteToWrite)   
 { 			 		 
@@ -164,7 +162,7 @@ void SPI_Flash_Write(u8* pBuffer,u32 WriteAddr,u16 NumByteToWrite)
 	u16 secremain;	   
  	u16 i;    
 
-	secpos=WriteAddr/4096;//扇区地址 0~511 for w25x16
+	secpos=WriteAddr/4096;//扇区地址 0~2047 for w25Q64
 	secoff=WriteAddr%4096;//在扇区内的偏移
 	secremain=4096-secoff;//扇区剩余空间大小   
 
@@ -197,8 +195,8 @@ void SPI_Flash_Write(u8* pBuffer,u32 WriteAddr,u16 NumByteToWrite)
 		   	NumByteToWrite-=secremain;				//字节数递减
 			if(NumByteToWrite>4096)secremain=4096;	//下一个扇区还是写不完
 			else secremain=NumByteToWrite;			//下一个扇区可以写完了
-		}	 
-	};	 	 
+		}	
+	}	 	 
 }
 //擦除整个芯片
 //整片擦除时间:
@@ -216,7 +214,7 @@ void SPI_Flash_Erase_Chip(void)
 	SPI_Flash_Wait_Busy();   				   //等待芯片擦除结束
 }   
 //擦除一个扇区
-//Dst_Addr:扇区地址 0~511 for w25x16
+//Dst_Addr:扇区地址 0~2047 for w25Q64
 //擦除一个山区的最少时间:150ms
 void SPI_Flash_Erase_Sector(u32 Dst_Addr)   
 {   

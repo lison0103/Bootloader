@@ -6,7 +6,7 @@ void wdt_init(void)
 {
     IWDG_WriteAccessCmd(IWDG_WriteAccess_Enable);  //使能对寄存器IWDG_PR和IWDG_RLR的写操作
     
-    IWDG_SetPrescaler(IWDG_Prescaler_64);  //设置IWDG预分频值:设置IWDG预分频值为64
+    IWDG_SetPrescaler(IWDG_Prescaler_256);  //设置IWDG预分频值:设置IWDG预分频值为256
     
     IWDG_SetReload(count);  //设置IWDG重装载值
     

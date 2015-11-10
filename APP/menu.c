@@ -316,7 +316,7 @@ u8 DisconnectUsb_process(void)
       {
           Framebuffer_display(25,130,25,154,24,Status_Descrip[4][LANGUAGE],Status_Descrip[6][LANGUAGE],2000);
       }
-      else if(usb_connect && (USB_STATUS_REG&0x01))
+      else if(usb_connect && (USB_STATUS_REG&0x02))
       {
           Framebuffer_display(25,130,25,154,24,Status_Descrip[5][LANGUAGE],Status_Descrip[6][LANGUAGE],2000);
       }
@@ -355,7 +355,9 @@ u8 UpdateApp_process(void)
       u8 res = 0;   
       char filestr[20] = {0};
       while(count)//失败重试三次
-      {                               
+      { 
+          IWDG_ReloadCounter();  //喂狗
+          
           Fatfs_init();            
           ReadDir("0:/", filestr);
           if(!isFileExist(filestr))//判断固件是否存在
@@ -405,6 +407,8 @@ void JumpToApp_process(void)
 {
   if(usb_connect == 0)
   {
+      IWDG_ReloadCounter();  //喂狗
+      
       menu_item = 5;
       menu_init();
       delay_ms(500);
@@ -450,15 +454,13 @@ void menu_pocess(void)
                 }
                 else if(key==KEY_LEFT)			        
                 {                                
-                    ConnectToPc_process();                 //连接电脑
-                    
+                    ConnectToPc_process();                 //连接电脑                    
                 }
                 else if(key==KEY_RIGHT)			        
                 {                   
                   if(DisconnectUsb_process())                //断开连接
-                  {
-                      
-                      delay_ms(1000);
+                  {                     
+                      delay_ms(500);
                       if(UpdateApp_process())
                       {
                           JumpToApp_process();
@@ -476,16 +478,6 @@ void menu_pocess(void)
                 {      
                     JumpToApp_process();                  //进入APP
                 } 
-                else if(key == KEY_F2)                          
-                {                 
-//                    ZTM_DisBufSwitch(0x40);
-//                  Framebuffer_display();
-//                  delay_ms(500);
-//                  Framebuffer_display();
-//                  delay_ms(500);
-//                  Framebuffer_display();
-//                  delay_ms(500);
-                }
             }
             else if(usb_connect)
             {

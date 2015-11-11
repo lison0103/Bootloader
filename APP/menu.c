@@ -46,6 +46,7 @@ const u8 *Status_Descrip[][2] =
   {" USB正在读出数据!"," USB is read!   "},
   {" 请稍后...       "," Please wait... "},  
   {" 无可更新固件!"," No Update File!"},
+  {" FATFS初始化失败!"," FATFS init fail!"},
 };
 
 extern u8 *Version;
@@ -67,13 +68,23 @@ void Framebuffer_display(u16 x1, u16 y1, u16 x2, u16 y2, u8 size, const u8 *buf1
     ZTM_DisBufSwitch(0x40);                                             /* 将显示缓存设置为备用缓存     */
     delay_ms(tms);
     
+//    ZTM_DisBufSwitch(0x20);                                             /* 写指针指向主缓存             */
+//    ZTM_DisBufSwitch(0x40);                                             /* 将显示缓存设置为主缓存       */
+//    ZTM_DisBufSwitch(0x10);                                             /* 使能自动缓存管理             */   
+//
+//    TIM_Cmd(TIM3, ENABLE);
+}
+/*******************************************************************************
+功能：关闭图层显示
+*******************************************************************************/
+void Closeframebuffer(void)
+{    
     ZTM_DisBufSwitch(0x20);                                             /* 写指针指向主缓存             */
     ZTM_DisBufSwitch(0x40);                                             /* 将显示缓存设置为主缓存       */
     ZTM_DisBufSwitch(0x10);                                             /* 使能自动缓存管理             */   
 
     TIM_Cmd(TIM3, ENABLE);
 }
-
 /*******************************************************************************
 功能：读取语言设置
 *******************************************************************************/
@@ -299,12 +310,22 @@ void ConnectToPc_process(void)
         menu_item = 2;
         menu_init();
         
+        Framebuffer_display(40,130,30,154,24,Status_Descrip[0][LANGUAGE],"",100);
         printf("\r\n初始化FATFS!!\r\n");
-        Fatfs_init();
-        
-        printf("\r\n初始化USB!!\r\n");
-        UsbMassStor_init();    
-        Framebuffer_display(40,130,30,154,24,Status_Descrip[0][LANGUAGE],"",2000);
+        //fatfs初始化失败
+        if(Fatfs_init())
+        {
+            usb_connect = 0;
+            Closeframebuffer();
+            Framebuffer_display(25,130,30,154,24,Status_Descrip[8][LANGUAGE],"",1000);
+        }
+        //fatfs初始化成功
+        else
+        {
+            printf("\r\n初始化USB!!\r\n");
+            UsbMassStor_init();    
+        }
+        Closeframebuffer();
     }  
 }
 /*******************************************************************************
@@ -315,10 +336,12 @@ u8 DisconnectUsb_process(void)
       if(usb_connect && (USB_STATUS_REG&0x01))
       {
           Framebuffer_display(25,130,25,154,24,Status_Descrip[4][LANGUAGE],Status_Descrip[6][LANGUAGE],2000);
+          Closeframebuffer();
       }
       else if(usb_connect && (USB_STATUS_REG&0x02))
       {
           Framebuffer_display(25,130,25,154,24,Status_Descrip[5][LANGUAGE],Status_Descrip[6][LANGUAGE],2000);
+          Closeframebuffer();
       }
       else if(usb_connect)
       {
@@ -327,6 +350,7 @@ u8 DisconnectUsb_process(void)
             menu_init();
             printf("\r\n exit usb mass \r\n");
             
+            Framebuffer_display(40,130,30,154,24,Status_Descrip[1][LANGUAGE],"",100);
             usb_port_set(0);       
         #if defined(USE_MYMALLOC)
             myfree(Data_Buffer);
@@ -334,7 +358,8 @@ u8 DisconnectUsb_process(void)
         #endif
             delay_ms(500);   
             
-            Framebuffer_display(40,130,30,154,24,Status_Descrip[1][LANGUAGE],"",1000);
+            
+            Closeframebuffer();
             return 1;
       }     
       return 0;
@@ -347,56 +372,67 @@ u8 UpdateApp_process(void)
 {
     if(usb_connect == 0)
     {
-      menu_item = 4;
-      menu_init();                            
-      printf("初始化FATFS!!\r\n");                       
-      
-      u8 count = 3;
-      u8 res = 0;   
-      char filestr[20] = {0};
-      while(count)//失败重试三次
-      { 
-          IWDG_ReloadCounter();  //喂狗
-          
-          Fatfs_init();            
-          ReadDir("0:/", filestr);
-          if(!isFileExist(filestr))//判断固件是否存在
-          {                                 
-              printf("开始更新固件...\r\n");
-              Framebuffer_display(40,130,30,154,24,Status_Descrip[2][LANGUAGE],"",1500);
-              
-              res = UpdateApp(filestr);
-              if(!res)//从spi flash复制APP到stmflash中
-              {	    
-                  TXM_StringDisplay(0,20,250,24,1,RED ,BLUE, (void*)Status_Item_Descrip[3][LANGUAGE]);//状态：APP更新完成
-                  printf("固件更新完成!\r\n");	
-                  
-                  DeleteFile(filestr);                          //固件更新成功后删除
-                  BKP_Write(BKP_ADDR1(2),App_Version[0]);       //记录更新固件版本号
-                  BKP_Write(BKP_ADDR1(3),App_Version[1]);
-                  
-                  return 1;                  
-              }
-              else if(FR_INVALID_OBJECT == res)
-              {
-                  TXM_StringDisplay(0,20,250,24,1,RED ,BLUE, (void*)Status_Item_Descrip[11][LANGUAGE]);//状态：非合法程序                  
-              }
-              else 
-              {
-                  TXM_StringDisplay(0,20,250,24,1,RED ,BLUE, (void*)Status_Item_Descrip[4][LANGUAGE]);//状态：更新失败
-                  printf("非FLASH应用程序!\r\n");
-              }
-          }
-          else 
-          {
-              TXM_StringDisplay(0,20,250,24,1,RED ,BLUE, (void*)Status_Item_Descrip[5][LANGUAGE]);//状态：无可更新固件
-              Framebuffer_display(40,130,30,154,24,Status_Descrip[7][LANGUAGE],"",1500);
-              printf("没有可以更新的固件!\r\n");
-              break;                        
-          }
-          count--;
-      }
+        menu_item = 4;
+        menu_init();                            
+        printf("初始化FATFS!!\r\n");                       
+        
+        u8 count = 3;
+        u8 res = 0;   
+        char filestr[20] = {0};
+        while(count)//失败重试三次
+        { 
+            IWDG_ReloadCounter();  //喂狗
+            
+            if(Fatfs_init())
+            {
+                  Framebuffer_display(25,130,30,154,24,Status_Descrip[8][LANGUAGE],"",1000);
+                  Closeframebuffer();
+            }
+            else
+            {
+                  ReadDir("0:/", filestr);
+                  if(!isFileExist(filestr))//判断固件是否存在
+                  {                                 
+                      printf("开始更新固件...\r\n");
+                      Framebuffer_display(40,130,30,154,24,Status_Descrip[2][LANGUAGE],"",100);
+                      
+                      res = UpdateApp(filestr);
+                      Closeframebuffer();
+                      if(!res)//从spi flash复制APP到stmflash中
+                      {	    
+
+                          TXM_StringDisplay(0,20,250,24,1,RED ,BLUE, (void*)Status_Item_Descrip[3][LANGUAGE]);//状态：APP更新完成
+                          printf("固件更新完成!\r\n");	
+                          
+                          DeleteFile(filestr);                          //固件更新成功后删除
+                          BKP_Write(BKP_ADDR1(2),App_Version[0]);       //记录更新固件版本号
+                          BKP_Write(BKP_ADDR1(3),App_Version[1]);
+                          
+                          return 1;                  
+                      }
+                      else if(FR_INVALID_OBJECT == res)
+                      {
+                          TXM_StringDisplay(0,20,250,24,1,RED ,BLUE, (void*)Status_Item_Descrip[11][LANGUAGE]);//状态：非合法程序                  
+                      }
+                      else 
+                      {
+                          TXM_StringDisplay(0,20,250,24,1,RED ,BLUE, (void*)Status_Item_Descrip[4][LANGUAGE]);//状态：更新失败
+                          printf("非FLASH应用程序!\r\n");
+                      }
+                  }
+                  else 
+                  {
+                      TXM_StringDisplay(0,20,250,24,1,RED ,BLUE, (void*)Status_Item_Descrip[5][LANGUAGE]);//状态：无可更新固件
+                      Framebuffer_display(40,130,30,154,24,Status_Descrip[7][LANGUAGE],"",1000);
+                      Closeframebuffer();
+                      printf("没有可以更新的固件!\r\n");
+                      break;                        
+                  }
+            }
+            count--;
+        }
     } 
+    
     return 0;
 }
 
@@ -411,14 +447,18 @@ void JumpToApp_process(void)
       
       menu_item = 5;
       menu_init();
-      delay_ms(500);
+      delay_ms(100);
       
       printf("开始执行FLASH用户代码!!\r\n");
       if(((*(vu32*)(FLASH_APP1_ADDR+4))&0xFF000000)==0x08000000)//判断是否为0X08XXXXXX.
       {	 
           Framebuffer_display(40,130,30,154,24,Status_Descrip[3][LANGUAGE],"",1000);
-          TIM_Cmd(TIM3, DISABLE);
-          delay_ms(500);
+          Closeframebuffer();
+          TIM_Cmd(TIM3, DISABLE);      
+          delay_ms(100);
+          INTX_DISABLE();          
+//          __set_FAULTMASK(1);
+//          NVIC_SystemReset();
           iap_load_app(FLASH_APP1_ADDR);//执行FLASH APP代码
       }
       else 
@@ -441,7 +481,7 @@ void menu_pocess(void)
             {
                 sleepcount = 0;
                 ZTM_SetBuzzer(10);                          //按键按下，蜂鸣器响一声
-                
+                                
                 if(lcd_sleep)                               //若lcd休眠，则退出
                 {
                     lcd_sleep = 0;                    
@@ -487,6 +527,13 @@ void menu_pocess(void)
 //                    delay_ms(1000);
 //                    UpdateApp_process();
 //                }
+            }
+            
+            if(sleepcount > 1*120)                      //1分钟无操作，调低屏幕亮度
+            {
+                sleepcount = 0;
+                lcd_sleep = 1;
+                LCM_Light_Setting(5);
             }
 //            delay_ms(10);
 }

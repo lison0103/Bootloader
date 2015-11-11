@@ -50,19 +50,10 @@ void TIM3_IRQHandler(void)   //TIM3中断
                     TIM_ClearITPendingBit(TIM3, TIM_IT_Update  );  //清除TIMx的中断待处理位:TIM 中断源 
                     RTCC_GetTime(TimeBuff);
                     time_display(307, 308, TimeBuff);
+                    
                     if(lcd_sleep == 0)
                     {                  
                         sleepcount++;
-                        if(sleepcount > 1*120)  //1分钟无操作，调低屏幕亮度
-                        {
-                            sleepcount = 0;
-                            lcd_sleep = 1;
-                            LCM_Light_Setting(5);
-                        }
-                    }
-                    else
-                    {
-                        sleepcount = 0;
                     }
 		}
 }

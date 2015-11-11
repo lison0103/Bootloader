@@ -9,7 +9,7 @@
 #include "delay.h"
 #include "usart.h"
 
-void Fatfs_init(void);
+u8 Fatfs_init(void);
 u8 isFileExist(char *filename);
 u8 UpdateApp(char *filename);
 u8 DeleteFile(char *filename);

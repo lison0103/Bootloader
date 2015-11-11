@@ -3,13 +3,10 @@
 #include <stm32f10x.h>
 #include "ff.h"
 
-extern FATFS *fs[1];  
-//extern FIL *file;	 
-//extern FIL *ftemp;	 
+extern FATFS *fs[1];  	 
 extern UINT br,bw;
 extern FILINFO fileinfo;
 extern DIR dir;
-//extern u8 *fatbuf;//SD卡数据缓存区
 
 
 //f_typetell返回的类型定义

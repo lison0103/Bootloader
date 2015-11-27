@@ -201,7 +201,7 @@ void USART2_IRQHandler(void)
 ***************************************************************************************************/  
 
 
-void USART2_Init(void)
+void USART2_Init(u32 mbaud)
 {
 #ifdef USART2_EN
 	GPIO_InitTypeDef GPIO_InitStruct;
@@ -233,7 +233,7 @@ void USART2_Init(void)
     NVIC_Init(&NVIC_InitStructure);
   #endif
 
-	BSP_USART_Init(USART2, 115200, USART_Parity_No);//, ENABLE
+	BSP_USART_Init(USART2, mbaud, USART_Parity_No);//, ENABLE
 	
   //if(DMAState==ENABLE)       
 	BSP_USART_DMA_Init(USART2,uart2_tx_buff,uart2_rx_buff);

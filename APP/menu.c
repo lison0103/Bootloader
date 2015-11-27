@@ -184,6 +184,8 @@ void menu_init(void)
    
   if(0 == menu_item)//≤Àµ•≥ı ºªØ
   {
+      ZTM_RectangleFill (0, 0, 239, 319,LGRAY); 
+      delay_ms(5);
       ZTM_FullScreenImageDisp(300);
       delay_ms(5);
       ZTM_RectangleFill (0, 280,239, 319,DGRAY); 

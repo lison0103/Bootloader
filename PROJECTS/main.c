@@ -33,8 +33,15 @@ int main(void)
 	uart_init(9600);	 //USART3初始化为9600,用作串口log打印
 #endif        	               
         key_init();             //按键初始化                               
-        USART2_Init();          //USART2初始化，用作LCD数据传输                              
+        USART2_Init(115200);          //USART2初始化，用作LCD数据传输  
+//  USART2_Init(921600);  
         LCM_Init();             //ZTM LCD初始化
+        
+//  u8 high_baud[] = {0xAA, 0xE0, 0x55, 0xAA, 0x5A, 0xA5, 0x00, 0x0E, 0x10, 0x00, 0x75, 0x5F, 0x00, 0x01, 0xCC, 0x33, 0xC3, 0x3C};
+//  
+//  BSP_USART_Send(LCM_COM_PORT,high_baud,sizeof(high_baud)/sizeof(char));
+  
+//  USART2_Init(921600);        
               
         enter_menu();           //判断是否进入Loader，等待约1s，按键F1进入，否则进入APP
         mem_init();		//初始化内存池

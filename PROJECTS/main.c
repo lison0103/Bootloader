@@ -42,12 +42,12 @@ int main(void)
 //  BSP_USART_Send(LCM_COM_PORT,high_baud,sizeof(high_baud)/sizeof(char));
   
 //  USART2_Init(921600);        
-              
+        BKP_Init();             //BKP寄存器初始化      
         enter_menu();           //判断是否进入Loader，等待约1s，按键F1进入，否则进入APP
         mem_init();		//初始化内存池
         SPI_Flash_Init();       //外部flash初始化        
         RTCC_Init();            //RTC初始化，rt1302
-        BKP_Init();             //BKP寄存器初始化
+        
         Version_init();         //读取APP更新到的版本号
         Language_init();        //读取APP设置的语言
         

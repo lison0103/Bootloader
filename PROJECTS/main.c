@@ -19,7 +19,7 @@
 #include "iwdg.h"
 #include "bkp.h"
 
-u8 *Version = {"V0.2"};
+u8 *Version = {"V0.3"};
 
 int main(void)
 { 
